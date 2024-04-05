@@ -1,6 +1,6 @@
-import 'package:bookstore/screens/login-screen.dart';
+import 'package:bookstore/controller/welcome_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../commons/colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -11,6 +11,12 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+
+  WelcomeController welcomeController = Get.put(WelcomeController());
+
+  final _formKey = GlobalKey<FormState>();
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,73 +69,110 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 14,),
-                    Container(
-                      width: 400,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Enter UserName',
-                          labelStyle: const TextStyle(color: blue,),
-                          suffixIcon: const Icon(Icons.person_2, color: blue,),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 14,),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                        child: TextFormField(
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return "Enter First Name";
+                            }
+                            return null;
+                          },
+                          controller: welcomeController.userNameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Enter UserName',
+                            labelStyle: const TextStyle(color: blue,),
+                            suffixIcon: const Icon(Icons.person_2, color: blue,),
 
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 400,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Enter Your Email',
-                          labelStyle: const TextStyle(color: blue,),
-                          suffixIcon: const Icon(Icons.email, color: blue,),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                        child: TextFormField(
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return "Enter User Email";
+                            }
+                            return null;
+                          },
+                          controller: welcomeController.userEmailController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Enter Your Email',
+                            labelStyle: const TextStyle(color: blue,),
+                            suffixIcon: const Icon(Icons.email, color: blue,),
 
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 400,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                        child: TextFormField(
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return "Enter Your Password";
+                            }else if(value.length<=5){
+                              return "Password have must 6 char";
+                            }
+                            return null;
+                          },
+                          controller: welcomeController.userPasswordController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Password',
+                            labelStyle: const TextStyle(color: blue,),
+                            suffixIcon: const Icon(Icons.password, color: blue,),
                           ),
-                          labelText: 'Password',
-                          labelStyle: const TextStyle(color: blue,),
-                          suffixIcon: const Icon(Icons.password, color: blue,),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 400,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Confirm Password',
-                          labelStyle: const TextStyle(color: blue,),
-                          suffixIcon: const Icon(Icons.password_rounded, color: blue,),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                        child: TextFormField(
+                          controller: welcomeController.userConfirmPasswordController,
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return "Enter Your Password";
+                            }else if(value.length<=5){
+                              return "Password have must 6 char";
+                            }else if(welcomeController.userPasswordController.text!=welcomeController.userConfirmPasswordController.text){
+                              return "your Password are miss match";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Confirm Password',
+                            labelStyle: const TextStyle(color: blue,),
+                            suffixIcon: const Icon(Icons.password_rounded, color: blue,),
 
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -137,10 +180,11 @@ class _SignupScreenState extends State<SignupScreen> {
               padding: const EdgeInsets.only(top: 510,left: 116),
               child: GestureDetector(
                 onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  );
+                 if(_formKey.currentState!.validate()){
+                   welcomeController.createUser(context: context);
+                 }
+
+                
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 45,vertical: 5),
@@ -158,6 +202,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
+            
+            Obx(()=> Text("${welcomeController.errorMessage.value}",style: TextStyle(color: Colors.red),))
           ],
         ),
 

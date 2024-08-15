@@ -4,13 +4,21 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+The bookstore is an application for buying and selling, used, new books, also donate books.
+ Following features will be added in application:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  Splash Screen
+  SignUp
+  Login
+  Dashboard
+  Communication
+  Ad posting
+  AI Chatbot
+  Account settings
+  
+Users will create accounts to use App, anyone could post ad.
+Users have to pay for ad(Jb tk ad show ho ga, pay karna ho ga).
+Buyer contacts seller, they could decide a location and exchange money and books.
+Search bar and AI chatbot are important features of App.
+Account setting options.
+Books could be donated as well.

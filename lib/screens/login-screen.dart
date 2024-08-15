@@ -1,7 +1,10 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/screens/home-screen.dart';
+import 'package:bookstore/screens/home-pg.dart';
 import 'package:bookstore/screens/signup-screen.dart';
 import 'package:flutter/material.dart';
+
+import '../forgotpassword.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -108,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                  child: Container(
@@ -127,12 +133,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            const Padding(
-              padding:  EdgeInsets.only(top: 460,left: 130),
-              child: Text('Forgot Password ?',style: TextStyle(fontSize: 13,color: blue),),
+            Padding(
+              padding: const EdgeInsets.only(top: 465, left: 125),
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPassword()));
+                },
+                  child: Text('Forgot Password?', style: TextStyle(color: blue, fontSize: 15),)
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 480, left: 95),
+              padding: const EdgeInsets.only(top: 490, left: 95),
               child: Row(
                 children: [
                   const Text(

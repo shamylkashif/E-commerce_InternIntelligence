@@ -18,7 +18,7 @@ class _SpleshScreenState extends State<SpleshScreen> {
     moveToNextScreen(context: context);
   }
   Future<void> moveToNextScreen({required BuildContext context}) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 5));
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),

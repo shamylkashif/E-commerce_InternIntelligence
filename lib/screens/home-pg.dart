@@ -51,8 +51,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
+          Text('Our Top Picks,'),
           Container(
             height: 300,
             width: double.infinity,
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
         ],
       ),
       drawer: ClipPath(

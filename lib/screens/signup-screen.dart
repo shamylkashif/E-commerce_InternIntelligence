@@ -1,6 +1,5 @@
-import 'package:bookstore/controller/welcome_controller.dart';
+import 'package:bookstore/screens/login-screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../commons/colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -11,11 +10,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-
-  WelcomeController welcomeController = Get.put(WelcomeController());
-
-  final _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 250, left: 47),
               child: Container(
-                height: 230,
+                height: 270,
                 width: 265,
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -70,22 +64,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
                 child: Form(
-                  key: _formKey,
                   child: Column(
                     children: [
-                      const SizedBox(height: 14,),
+                      const SizedBox(height: 18,),
                       Container(
                         width: 400,
-                        height: 50,
+                        height: 60,
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                         child: TextFormField(
-                          validator: (value){
-                            if(value!.isEmpty){
-                              return "Enter First Name";
-                            }
-                            return null;
-                          },
-                          controller: welcomeController.userNameController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -99,16 +85,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       Container(
                         width: 400,
-                        height: 50,
+                        height: 60,
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                         child: TextFormField(
-                          validator: (value){
-                            if(value!.isEmpty){
-                              return "Enter User Email";
-                            }
-                            return null;
-                          },
-                          controller: welcomeController.userEmailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -122,18 +101,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       Container(
                         width: 400,
-                        height: 50,
+                        height: 60,
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                         child: TextFormField(
-                          validator: (value){
-                            if(value!.isEmpty){
-                              return "Enter Your Password";
-                            }else if(value.length<=5){
-                              return "Password have must 6 char";
-                            }
-                            return null;
-                          },
-                          controller: welcomeController.userPasswordController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -146,20 +116,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       Container(
                         width: 400,
-                        height: 50,
+                        height: 60,
                         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                         child: TextFormField(
-                          controller: welcomeController.userConfirmPasswordController,
-                          validator: (value){
-                            if(value!.isEmpty){
-                              return "Enter Your Password";
-                            }else if(value.length<=5){
-                              return "Password have must 6 char";
-                            }else if(welcomeController.userPasswordController.text!=welcomeController.userConfirmPasswordController.text){
-                              return "your Password are miss match";
-                            }
-                            return null;
-                          },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -177,15 +136,11 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 510,left: 116),
+              padding: const EdgeInsets.only(top: 535,left: 116),
               child: GestureDetector(
                 onTap: (){
-                 if(_formKey.currentState!.validate()){
-                   welcomeController.createUser(context: context);
-                 }
-
-                
-                },
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
+                  },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 45,vertical: 5),
                   decoration:BoxDecoration(borderRadius: BorderRadius.circular(12) ,color: yellow,
@@ -202,8 +157,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-            
-            Obx(()=> Text("${welcomeController.errorMessage.value}",style: TextStyle(color: Colors.red),))
           ],
         ),
 

@@ -1,8 +1,8 @@
+import 'package:bookstore/custom_tab_control.dart';
 import 'package:bookstore/screens/my-profile.dart';
 import 'package:bookstore/screens/sell.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
-import '../commons/colors.dart';
 import 'about-us.dart';
 import 'logout.dart';
 import 'our-books.dart';
@@ -14,11 +14,28 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   int _selectedIndex = 0;
+  late TabController _tabController;
+  final List book = [
+    {'imagePath': 'assets/slider/A million.webp',},
+    {'imagePath': 'assets/slider/Harry.jpeg',},
+    {'imagePath': 'assets/slider/The design.png',}
+  ];
+
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync:this);}
+
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
     });
 
     switch (index) {
@@ -53,17 +70,31 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          Text('Our Top Picks,'),
-          Container(
-            height: 300,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: yellow,
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.elliptical(MediaQuery.of(context).size.width,80.0),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 35, left: 10,right: 10),
+            child: Column(
+              children: [
+                CarouselSlider(
+                  items: [
+                    _buildImage('assets/s1.jpg'),
+                    _buildImage('assets/s2.jpg'),
+                    _buildImage('assets/s3.jpg'),
+                  ],
+                  options: CarouselOptions(
+                    height: 200,
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: true,
+                  ),
+                ),
+              ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 230),
+            child: Expanded(child: CustomTabBar()),
+          ),
+
 
         ],
       ),
@@ -114,6 +145,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+  Widget _buildImage(String imagePath) {
+    return ClipRRect(
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
+        height: 400,
+        width: double.infinity,
+      ),
+    );
+  }
+
 
 class DrawerClipper extends CustomClipper<Path>{
   @override

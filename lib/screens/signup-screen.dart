@@ -63,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ],
                 ),
-                child: Form(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       const SizedBox(height: 18,),

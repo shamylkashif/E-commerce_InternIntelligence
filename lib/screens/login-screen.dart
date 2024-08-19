@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 250, left: 47),
               child: Container(
-                height: 130,
+                height: 150,
                 width: 265,
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 14,),
                     Container(
                       width: 400,
-                      height: 50,
+                      height: 60,
                       padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Container(
                       width: 400,
-                      height: 50,
+                      height: 60,
                       padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 410,left: 116),
+              padding: const EdgeInsets.only(top: 415,left: 116),
               child: GestureDetector(
                 onTap: (){
                   Navigator.push(

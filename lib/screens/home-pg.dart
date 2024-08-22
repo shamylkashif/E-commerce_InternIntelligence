@@ -6,6 +6,10 @@ import 'package:bookstore/screens/sell.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import '../ask_ai.dart';
+import '../post_ad.dart';
+import '../search_pg.dart';
+import '../settings.dart';
 import 'about-us.dart';
 import 'logout.dart';
 import 'our-books.dart';
@@ -203,7 +207,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                                       padding: EdgeInsets.symmetric(horizontal: 10,),
                                       decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(3),
                                           border: Border.all(color: blue )
                                       ),
                                       child: Text('Buy',
@@ -265,40 +269,65 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         color: yellow,
         animationDuration: Duration(milliseconds: 300),
         items: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.home, size: 20, color: blue,),
-              Text("Home", style: TextStyle(color: blue, fontSize: 10)),
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.home, size: 20, color: blue,),
+                Text("Home", style: TextStyle(color: blue, fontSize: 10)),
+              ],
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.search, size: 20, color: blue,),
-              Text("Search", style: TextStyle(color: blue, fontSize: 10)),
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.search, size: 20, color: blue,),
+                Text("Search", style: TextStyle(color: blue, fontSize: 10)),
+              ],
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.android, size: 20, color: blue,),
-              Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>AskAI()));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.android, size: 20, color: blue,),
+                Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
+              ],
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add, size: 20, color: blue,),
-              Text("Ad Post", style: TextStyle(color: blue, fontSize: 10)),
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAD()));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add, size: 20, color: blue,),
+                Text("Post Ad", style: TextStyle(color: blue, fontSize: 10)),
+              ],
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.settings, size: 20, color: blue,),
-              Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
-            ],
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.settings, size: 20, color: blue,),
+                Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
+              ],
+            ),
           ),
         ],
       ),

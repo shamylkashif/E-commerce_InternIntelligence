@@ -1,7 +1,10 @@
+import 'package:bookstore/book_desp.dart';
+import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
 import 'package:bookstore/screens/my-profile.dart';
 import 'package:bookstore/screens/sell.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'about-us.dart';
 import 'logout.dart';
@@ -21,6 +24,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     {'imagePath': 'assets/slider/A million.webp',},
     {'imagePath': 'assets/slider/Harry.jpeg',},
     {'imagePath': 'assets/slider/The design.png',}
+  ];
+  final List<Map<String, dynamic>> pBook = [
+    {
+      'image' : 'assets/slider/memory.jpeg',
+      'rating': 4.1,
+      'title' : 'Memory',
+      'author' : 'Debbie Berny',
+    },
+    {
+      'image' : 'assets/slider/download.jpeg',
+      'rating': 4.5,
+      'title' : 'Harry Potter',
+      'author' : 'J.K. Rowling',
+    },
+    {
+      'image' : 'assets/slider/Harry.jpeg',
+      'rating': 4.7,
+      'title' : 'Soul',
+      'author' : 'Olivia Wilson',
+    },
   ];
 
   void initState() {
@@ -91,10 +114,120 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 230),
+            padding: const EdgeInsets.only(top: 210),
             child: Expanded(child: CustomTabBar()),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 560,left: 5,right: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Popular Books',style: TextStyle(fontSize: 20,color: blue,fontWeight: FontWeight.bold),),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: pBook.map((pBookItem) {
+                      final imagePath = pBookItem['image'] ?? 'assets/slider/default_image.jpeg';
+                      return Container(
+                        height: 100,
+                        width: 220,
+                        margin: EdgeInsets.only(right: 10), // Add spacing between containers
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.yellow.shade600),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.asset(
+                                  imagePath, // Replace with your image for each book
+                                  height: 90,
+                                  width: 60,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8), // Add spacing between the image and text
+                            Padding(
+                              padding: const EdgeInsets.only(left: 17,top: 8),
+                              child: Column(
+                                //mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+                                crossAxisAlignment: CrossAxisAlignment.start, // Align content to the start horizontally
+                                children: [
+                                  Text(
+                                    pBookItem['title'], // Display the title of the book
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Text(
+                                    pBookItem['author'], // Display the author of the book
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.yellow[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.star, color: blue, size: 17),
+                                        SizedBox(width: 4),
+                                        Text(
+                                          pBookItem['rating'].toString(),
+                                          style: TextStyle(
+                                            color: blue,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> BookDescription()));
+                                  },
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: 70,),
+                                      padding: EdgeInsets.symmetric(horizontal: 10,),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(color: blue )
+                                      ),
+                                      child: Text('Buy',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: blue,
+                                      ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
 
+
+              ],
+            ),
+          ),
 
         ],
       ),
@@ -126,6 +259,50 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
         ),
       ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: yellow,
+        color: yellow,
+        animationDuration: Duration(milliseconds: 300),
+        items: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.home, size: 20, color: blue,),
+              Text("Home", style: TextStyle(color: blue, fontSize: 10)),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.search, size: 20, color: blue,),
+              Text("Search", style: TextStyle(color: blue, fontSize: 10)),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.android, size: 20, color: blue,),
+              Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.add, size: 20, color: blue,),
+              Text("Ad Post", style: TextStyle(color: blue, fontSize: 10)),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.settings, size: 20, color: blue,),
+              Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
+            ],
+          ),
+        ],
+      ),
+
     );
   }
   ListTile _buildDrawerItem(IconData icon, String title, int index) {

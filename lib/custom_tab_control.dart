@@ -1,8 +1,7 @@
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/material.dart';
-
 import 'book.dart';
-import 'book_desp.dart'; // Ensure this file contains the 'blue' color
+import 'book_desp.dart';
 
 class CustomTabBar extends StatefulWidget {
   @override
@@ -38,7 +37,7 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -53,13 +52,18 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
       children: [
         TabBar(
           controller: _tabController,
+          indicatorColor: Colors.yellow[600], // Color of the indicator line
+          indicatorWeight: 3.0, // Weight of the indicator line
+          labelColor: Colors.yellow[600], // Color of the selected tab text
+          unselectedLabelColor: blue, // Color of the unselected tab text
           tabs: [
             Tab(text: 'All Genre'),
             Tab(text: 'Comedy'),
             Tab(text: 'Fiction'),
+            Tab(text: 'Horror'),
           ],
         ),
-        SizedBox(height: 20,),
+        SizedBox(height: 15),
         Expanded(
           child: TabBarView(
             controller: _tabController,
@@ -68,62 +72,291 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: books.map((book) => InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDescription()));
-                    },
-                    child: Container(
-                      width: 180, // Adjust width as needed
-                      margin: EdgeInsets.symmetric(horizontal: 6), // Space between columns
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
+                  children: books.map((book) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            },
                             child: Image.asset(
                               book.imageUrl,
-                              height: 200, // Specific height for the image
-                              width: 150, // Specific width for the image
-                              fit: BoxFit.cover, // How the image should be fitted inside the box
+                              height: 200,
+                              width: 150,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          SizedBox(height: 5), // Space between the image and text
-                          Text(
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.title,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.author,
                             style: TextStyle(
-                              color: Colors.grey, // Sets the text color to grey like a hint
-                              fontSize: 16, // Adjusted size for consistency
+                              color: Colors.grey[350],
+                              fontSize: 16,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.yellow, size: 17),
-                              SizedBox(width: 4),
-                              Text(
-                                book.rating.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: blue, size: 17),
+                                SizedBox(width: 4),
+                                Text(
+                                  book.rating.toString(),
+                                  style: TextStyle(
+                                    color: blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   )).toList(),
                 ),
               ),
-              Center(child: Text('Comedy Content')),
-              Center(child: Text('Fiction Content')),
+              Center(child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: books.map((book) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            },
+                            child: Image.asset(
+                              book.imageUrl,
+                              height: 200,
+                              width: 150,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.author,
+                            style: TextStyle(
+                              color: Colors.grey[350],
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: blue, size: 17),
+                                SizedBox(width: 4),
+                                Text(
+                                  book.rating.toString(),
+                                  style: TextStyle(
+                                    color: blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              ),),
+              Center(child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: books.map((book) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            },
+                            child: Image.asset(
+                              book.imageUrl,
+                              height: 200,
+                              width: 150,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.author,
+                            style: TextStyle(
+                              color: Colors.grey[350],
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: blue, size: 17),
+                                SizedBox(width: 4),
+                                Text(
+                                  book.rating.toString(),
+                                  style: TextStyle(
+                                    color: blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              ),),
+              Center(child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: books.map((book) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            },
+                            child: Image.asset(
+                              book.imageUrl,
+                              height: 200,
+                              width: 150,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.author,
+                            style: TextStyle(
+                              color: Colors.grey[350],
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: blue, size: 17),
+                                SizedBox(width: 4),
+                                Text(
+                                  book.rating.toString(),
+                                  style: TextStyle(
+                                    color: blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              ),),
             ],
           ),
         ),

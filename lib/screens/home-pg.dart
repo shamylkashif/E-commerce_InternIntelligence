@@ -89,7 +89,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         Navigator.push(context, MaterialPageRoute(builder: (context)=> LogOut() ));
 
         break;
-
     }
   }
   @override
@@ -97,6 +96,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     return Scaffold(
       body: Stack(
         children: [
+          //Slider
           Padding(
             padding: const EdgeInsets.only(top: 35, left: 10,right: 10),
             child: Column(
@@ -117,10 +117,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
               ],
             ),
           ),
+          //TabBar
           Padding(
             padding: const EdgeInsets.only(top: 210),
             child: Expanded(child: CustomTabBar()),
           ),
+          //PopularBooks
           Padding(
             padding: const EdgeInsets.only(top: 560,left: 5,right: 5),
             child: Column(
@@ -276,7 +278,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.home, size: 20, color: blue,),
+                Icon(Icons.home, size: 20, color:blue,),
                 Text("Home", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
@@ -334,6 +336,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
 
     );
   }
+  //Drawer
   ListTile _buildDrawerItem(IconData icon, String title, int index) {
     return ListTile(
       leading: Icon(icon,
@@ -343,7 +346,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         style: TextStyle(
             color: _selectedIndex == index ? Colors.black : Colors.black),
       ),
-      //tileColor: _selectedIndex == index ? Colors.yellow : Colors.transparent,
       onTap: () {
         Navigator.pop(context);
         _onItemTapped(index);
@@ -351,6 +353,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     );
   }
 }
+  //Slider
   Widget _buildImage(String imagePath) {
     return ClipRRect(
       child: Image.asset(
@@ -362,7 +365,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     );
   }
 
-
+  //DrawerDesign
 class DrawerClipper extends CustomClipper<Path>{
   @override
   Path getClip(Size size) {

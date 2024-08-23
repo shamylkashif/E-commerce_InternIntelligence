@@ -51,6 +51,7 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
     return Column(
       children: [
         TabBar(
+          dividerColor: Colors.transparent,
           controller: _tabController,
           indicatorColor: Colors.yellow[600], // Color of the indicator line
           indicatorWeight: 3.0, // Weight of the indicator line

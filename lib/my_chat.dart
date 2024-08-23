@@ -1,20 +1,13 @@
-import 'package:bookstore/post_ad.dart';
-import 'package:bookstore/screens/home-pg.dart';
-import 'package:bookstore/settings.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-import 'ask_ai.dart';
-import 'commons/colors.dart';
-
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class MyChat extends StatefulWidget {
+  const MyChat({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<MyChat> createState() => _MyChatState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _MyChatState extends State<MyChat> {
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -134,76 +127,6 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-      backgroundColor: Colors.transparent,
-      buttonBackgroundColor: yellow,
-      color: yellow,
-      animationDuration: Duration(milliseconds: 300),
-      items: [
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.home, size: 20, color:blue,),
-              Text("Home", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.search, size: 20, color: blue,),
-              Text("Search", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>AskAI()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.android, size: 20, color: blue,),
-              Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAD()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add, size: 20, color: blue,),
-              Text("Post Ad", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.settings, size: 20, color: blue,),
-              Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-      ],
-    ),
-
     );
   }
 }
-

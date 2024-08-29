@@ -1,3 +1,4 @@
+import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatefulWidget {
@@ -11,7 +12,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backGround,
     );
   }
 }

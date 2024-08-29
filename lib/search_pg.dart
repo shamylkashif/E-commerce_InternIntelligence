@@ -24,7 +24,7 @@ class _SearchPageState extends State<SearchPage> {
     scrollController1 = ScrollController();
     scrollController2 = ScrollController();
 
-    timer = Timer.periodic(const Duration(milliseconds: 50), (Timer t) {
+    timer = Timer.periodic(const Duration(milliseconds: 90), (Timer t) {
       autoScroll(scrollController1, reverse1, (isReverse) {
         setState(() {
           reverse1 = isReverse;
@@ -93,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           SizedBox(height: 10,),
           SizedBox(
-            height: 107.5,
+            height: 90,
             child: Column(
               children: [
                 Expanded(
@@ -145,9 +145,9 @@ class CategoryContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(4),
       padding: const EdgeInsets.all(10),
-      width: 100,
+      //width: 100,
       decoration: BoxDecoration(
         color: yellow,
         borderRadius: BorderRadius.circular(17),

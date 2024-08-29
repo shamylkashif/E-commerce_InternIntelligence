@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
 import '../search_pg.dart';
-import '../settings.dart';
+import '../my_account.dart';
 import 'about-us.dart';
 import 'logout.dart';
 import 'our-books.dart';
@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     SearchPage(),
     AskAI(),
     PostAD(),
-    Settings()
+    MyAccount()
   ];
 
   late TabController _tabController;
@@ -292,8 +292,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.home, size: 20, color:blue,),
-                Text("Home", style: TextStyle(color: blue, fontSize: 10)),
+                Icon(Icons.home, size: 24, color:blue,),
+               // Text("Home", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
           ),
@@ -307,8 +307,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.search, size: 20, color: blue,),
-                Text("Search", style: TextStyle(color: blue, fontSize: 10)),
+                Icon(Icons.search, size: 24, color: blue,),
+               // Text("Search", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
           ),
@@ -322,8 +322,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.android, size: 20, color: blue,),
-                Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
+                Icon(Icons.android, size: 24, color: blue,),
+                //Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
           ),
@@ -337,8 +337,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.add, size: 20, color: blue,),
-                Text("Post Ad", style: TextStyle(color: blue, fontSize: 10)),
+                Icon(Icons.add, size: 24, color: blue,),
+                //Text("Post Ad", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
           ),
@@ -352,8 +352,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.settings, size: 20, color: blue,),
-                Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
+                Icon(Icons.person, size: 24, color: blue,),
+               // Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
               ],
             ),
           ),

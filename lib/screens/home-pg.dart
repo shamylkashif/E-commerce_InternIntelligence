@@ -23,6 +23,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   int _selectedIndex = 0;
+  int _selectIndex = 0;
+
+  final List<Widget> _pages = [
+    HomePage(),  // Replace with your actual pages
+    SearchPage(),
+    AskAI(),
+    PostAD(),
+    Settings()
+  ];
+
   late TabController _tabController;
   final List book = [
     {'imagePath': 'assets/slider/A million.webp',},
@@ -94,7 +104,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body:
+        Stack(
         children: [
           //Slider
           Padding(
@@ -234,9 +245,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
               ],
             ),
           ),
-
         ],
       ),
+
       drawer: ClipPath(
         clipper: DrawerClipper(),
         child: Drawer(
@@ -273,7 +284,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         items: [
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+              setState(() {
+                _selectIndex = 0;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>_pages[_selectIndex]));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -285,7 +299,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
+              setState(() {
+                _selectIndex = 1;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>_pages[_selectIndex]));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -297,7 +314,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AskAI()));
+              setState(() {
+                _selectIndex = 2;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>_pages[_selectIndex]));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -309,7 +329,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAD()));
+              setState(() {
+                _selectIndex = 3;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>_pages[_selectIndex]));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -321,7 +344,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           ),
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
+              setState(() {
+                _selectIndex = 4;
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>_pages[_selectIndex]));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -332,6 +358,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             ),
           ),
         ],
+        index: _selectIndex,
       ),
 
     );

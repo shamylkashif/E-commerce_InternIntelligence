@@ -1,209 +1,163 @@
-import 'package:bookstore/post_ad.dart';
-import 'package:bookstore/screens/home-pg.dart';
-import 'package:bookstore/settings.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/material.dart';
-
-import 'ask_ai.dart';
-import 'commons/colors.dart';
+import 'dart:async';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _controller = TextEditingController();
+  late ScrollController scrollController1;
+  late ScrollController scrollController2;
+  late Timer timer;
+
+  bool reverse1 = false;
+  bool reverse2 = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController1 = ScrollController();
+    scrollController2 = ScrollController();
+
+    timer = Timer.periodic(const Duration(milliseconds: 50), (Timer t) {
+      autoScroll(scrollController1, reverse1, (isReverse) {
+        setState(() {
+          reverse1 = isReverse;
+        });
+      });
+      autoScroll(scrollController2, reverse2, (isReverse) {
+        setState(() {
+          reverse2 = isReverse;
+        });
+      });
+    });
+  }
+
+  void autoScroll(ScrollController controller, bool reverse, Function(bool) updateDirection) {
+    double maxScrollExtent = controller.position.maxScrollExtent;
+    double minScrollExtent = controller.position.minScrollExtent;
+
+    if (!reverse) {
+      controller.jumpTo(controller.offset + 2);
+      if (controller.offset >= maxScrollExtent) {
+        updateDirection(true);  // Change direction to reverse
+      }
+    } else {
+      controller.jumpTo(controller.offset - 2);
+      if (controller.offset <= minScrollExtent) {
+        updateDirection(false);  // Change direction to forward
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController1.dispose();
+    scrollController2.dispose();
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 90,
-        backgroundColor: Colors.white,
-        elevation: 10,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 3),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage("assets/ppp.jpeg"),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Shamyl",
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            ),
-            Text(
-              "Online",
-              style: TextStyle(fontSize: 14, color: Colors.green),
-            ),
-          ],
-        ),
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (String value) {
-              // Handle option selection here
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'Option 1',
-                  child: Text('Report'),
-                ),
-                PopupMenuItem<String>(
-                  value: 'Option 2',
-                  child: Text('Block'),
-                ),
-                PopupMenuItem<String>(
-                  value: 'Option 3',
-                  child: Text('Clear chat'),
-                ),
-
-              ];
-            },
-            icon: Icon(
-              Icons.more_vert_outlined,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Container(
-              color: Colors.grey[100], // Placeholder for chat messages
+          Padding(
+            padding: const EdgeInsets.only(top: 100, left: 10, right: 10),
+            child: TextField(
+              style: const TextStyle(color: Colors.black,),
+              decoration: InputDecoration(
+                labelText: 'Search book',
+                labelStyle: const TextStyle(color: Color(0xFF0A4DA2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                prefixIcon: const Icon(Icons.search, color: Color(0xFF0A4DA2)),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF0A4DA2)),
+                ),
+              ),
             ),
           ),
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 1.0),
-            child: Row(
+          const SizedBox(height: 30),
+          const Padding(
+            padding: EdgeInsets.only(left: 6),
+            child: Text('Category', style: TextStyle(color: Color(0xFF0A4DA2), fontSize: 25)),
+          ),
+          SizedBox(height: 10,),
+          SizedBox(
+            height: 107.5,
+            child: Column(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.black,
+                Expanded(
+                  child: ListView(
+                    controller: scrollController1,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      CategoryContainer(label: 'Fantasy'),
+                      CategoryContainer(label: 'Horror'),
+                      CategoryContainer(label: 'Adventure'),
+                      CategoryContainer(label: 'Self-help'),
+                      CategoryContainer(label: 'Travel'),
+                      CategoryContainer(label: 'Cooking'),
+                      CategoryContainer(label: 'Crime'),
+                      CategoryContainer(label: 'Politics'),
+                    ],
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.emoji_emotions,
-                    color: Colors.black,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.attach_file_rounded,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message here',
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                  child: ListView(
+                    controller: scrollController2,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      CategoryContainer(label: 'Art'),
+                      CategoryContainer(label: 'Early Readers'),
+                      CategoryContainer(label: 'Text Books'),
+                      CategoryContainer(label: 'Study Guides'),
+                      CategoryContainer(label: 'Test Preparation'),
+                      CategoryContainer(label: 'Islam'),
+                      CategoryContainer(label: 'Nature'),
+                      CategoryContainer(label: 'Environment'),
+                    ],
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    // Implement send functionality here
-                  },
                 ),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-      backgroundColor: Colors.transparent,
-      buttonBackgroundColor: yellow,
-      color: yellow,
-      animationDuration: Duration(milliseconds: 300),
-      items: [
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.home, size: 20, color:blue,),
-              Text("Home", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.search, size: 20, color: blue,),
-              Text("Search", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>AskAI()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.android, size: 20, color: blue,),
-              Text("Ask AI", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAD()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add, size: 20, color: blue,),
-              Text("Post Ad", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.settings, size: 20, color: blue,),
-              Text("Settings", style: TextStyle(color: blue, fontSize: 10)),
-            ],
-          ),
-        ),
-      ],
-    ),
-
     );
   }
 }
 
+class CategoryContainer extends StatelessWidget {
+  final String label;
+
+  const CategoryContainer({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
+      width: 100,
+      decoration: BoxDecoration(
+        color: yellow,
+        borderRadius: BorderRadius.circular(17),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: const TextStyle(color: blue),
+        ),
+      ),
+    );
+  }
+}

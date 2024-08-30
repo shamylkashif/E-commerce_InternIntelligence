@@ -16,18 +16,21 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
     Book(
       title: 'Soul',
       author: 'Olivia Wilson',
+      price : 300,
       imageUrl: 'assets/slider/download.jpeg',
       rating: 4.7,
     ),
     Book(
       title: 'Mystery Book',
       author: 'John Doe',
+      price : 300,
       imageUrl: 'assets/slider/Harry.jpeg',
       rating: 4.5,
     ),
     Book(
       title: 'Memory',
       author: 'Debbie Berny',
+      price : 300,
       imageUrl: 'assets/slider/memory.jpeg',
       rating: 4.1,
     ),
@@ -106,17 +109,27 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
+                            book.price.toString(),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12
+                          ) ,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.author,
                             style: TextStyle(
                               color: Colors.grey[350],
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
@@ -142,7 +155,7 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                   )).toList(),
                 ),
               ),
-              Center(child: SingleChildScrollView(
+              Center(child:SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: books.map((book) => Padding(
@@ -178,17 +191,27 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
+                            book.price.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12
+                            ) ,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.author,
                             style: TextStyle(
                               color: Colors.grey[350],
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
@@ -213,8 +236,9 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                     ),
                   )).toList(),
                 ),
-              ),),
-              Center(child: SingleChildScrollView(
+              ),
+              ),
+              Center(child:SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: books.map((book) => Padding(
@@ -250,17 +274,27 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
+                            book.price.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12
+                            ) ,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.author,
                             style: TextStyle(
                               color: Colors.grey[350],
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
@@ -285,8 +319,9 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                     ),
                   )).toList(),
                 ),
-              ),),
-              Center(child: SingleChildScrollView(
+              ),
+              ),
+              Center(child:SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: books.map((book) => Padding(
@@ -322,17 +357,27 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
+                            book.price.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12
+                            ) ,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
                             book.author,
                             style: TextStyle(
                               color: Colors.grey[350],
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                             decoration: BoxDecoration(
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
@@ -357,7 +402,8 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                     ),
                   )).toList(),
                 ),
-              ),),
+              ),
+              ),
             ],
           ),
         ),

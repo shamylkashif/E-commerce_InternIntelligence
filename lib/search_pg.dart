@@ -149,7 +149,7 @@ class CategoryContainer extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       //width: 100,
       decoration: BoxDecoration(
-        color: yellow,
+        color: yellow.withOpacity(0.6),
         borderRadius: BorderRadius.circular(17),
       ),
       child: Center(

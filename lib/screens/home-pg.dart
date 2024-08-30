@@ -182,6 +182,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                                       fontSize: 14,
                                     ),
                                   ),
+
                                   Text(
                                     pBookItem['author'], // Display the author of the book
                                     style: TextStyle(

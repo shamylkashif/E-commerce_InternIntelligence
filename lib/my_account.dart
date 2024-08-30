@@ -58,14 +58,20 @@ class _MyAccountState extends State<MyAccount> {
                      begin: const FractionalOffset(0.5, 1),
                      end: const FractionalOffset(1.0, 0.0),
                    ),
-                   borderRadius: BorderRadius.circular(25)
+                   borderRadius: BorderRadius.circular(25),
+
                  ),
                  child: Column(
                    children: [
                       SizedBox(height: 12,),
-                      CircleAvatar(
-                        radius: 40,
-                      ),
+                     Container(
+                       height: 90,
+                       width: 90,
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.all(Radius.circular(100)),
+                           image: DecorationImage(image: AssetImage('assets/p.jpg'))
+                       ),
+                     ),
                      SizedBox(height: 8,),
                      Text('Clara Albert',
                        style: TextStyle(

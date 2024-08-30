@@ -1,7 +1,7 @@
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
-import 'package:bookstore/screens/my-profile.dart';
+import 'package:bookstore/screens/login-screen.dart';
 import 'package:bookstore/screens/sell.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -11,7 +11,6 @@ import '../post_ad.dart';
 import '../search_pg.dart';
 import '../my_account.dart';
 import 'about-us.dart';
-import 'logout.dart';
 import 'our-books.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     SearchPage(),
     AskAI(),
     PostAD(),
-    MyAccount()
+    MyProfile()
   ];
 
   late TabController _tabController;
@@ -96,7 +95,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
 
         break;
       case 5:
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> LogOut() ));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginScreen() ));
 
         break;
     }
@@ -131,11 +130,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           //TabBar
           Padding(
             padding: const EdgeInsets.only(top: 210),
-            child: Expanded(child: CustomTabBar()),
+            child: CustomTabBar(),
           ),
           //PopularBooks
           Padding(
-            padding: const EdgeInsets.only(top: 560,left: 5,right: 5),
+            padding: const EdgeInsets.only(top: 565,left: 5,right: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -247,7 +246,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             ),
           ),
         ],
-      ),
+              ),
 
       drawer: ClipPath(
         clipper: DrawerClipper(),

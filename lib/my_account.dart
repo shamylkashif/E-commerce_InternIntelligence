@@ -10,19 +10,14 @@ class MyProfile extends StatefulWidget {
 
   @override
   State<MyProfile> createState() => _MyProfileState();
-}
+} 
 
 class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
          appBar: AppBar(
-           leading: InkWell(
-               onTap: (){
-                 Navigator.pop(context);
-               },
-               child: Icon(Icons.arrow_back_ios, color: blue,)
-           ),
+           automaticallyImplyLeading: false,
            actions: [
              TextButton(
                  onPressed: (){

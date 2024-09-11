@@ -37,9 +37,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: yellow, // You can set your preferred color here
-        iconTheme: IconThemeData(color: blue), // Color for the drawer icon
-        elevation: 0, // Remove the shadow if needed
+        backgroundColor: yellow,
+        iconTheme: IconThemeData(color: blue),
+        elevation: 0,
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(

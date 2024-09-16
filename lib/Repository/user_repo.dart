@@ -1,12 +1,15 @@
-import 'package:bookstore/user_model.dart';
+import 'package:bookstore/Models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../loaders.dart';
 
 class FirestoreController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Sign In Functionality
   Future<bool> signInWithFirebaseAuth(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(
@@ -20,6 +23,7 @@ class FirestoreController {
     }
   }
 
+  // Sign Up and Save Data to Firestore
   Future<bool> signUp(BuildContext context, Users users) async {
     if (users.email.isEmpty || users.password.isEmpty) {
       SnackbarHelper.show(context, 'Email and password cannot be empty.', backgroundColor: Colors.red.shade900);
@@ -34,18 +38,24 @@ class FirestoreController {
         if (user != null) {
           users.uid = user.uid;
 
-          await _db.collection("PatientMadLab").doc(user.uid).set(users.toJson());
+          // Try saving user data to Firestore
+          await _db.collection("BookStoreUsers").doc(user.uid).set(users.toJson());
+
+          // Data saved successfully, return true
           return true;
         }
       } else {
         SnackbarHelper.show(context, 'Failed to create account. Please try again.', backgroundColor: Colors.red.shade900);
       }
     } catch (error) {
+      print('Error during sign-up and Firestore save: $error');
       SnackbarHelper.show(context, 'Something went wrong. Please try again.', backgroundColor: Colors.red.shade900);
     }
+
     return false;
   }
 
+  // Register the user in Firebase Auth
   Future<bool> registerUser(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
@@ -59,10 +69,11 @@ class FirestoreController {
     }
   }
 
+  // Check if an account with the same email exists in Firestore
   Future<bool> checkAccountExists(BuildContext context, String email) async {
     try {
       final emailQuery = await _db
-          .collection('PatientMadLab')
+          .collection('BookStoreUsers')
           .where('email', isEqualTo: email)
           .limit(1)
           .get();
@@ -77,5 +88,4 @@ class FirestoreController {
       return false;
     }
   }
-
 }

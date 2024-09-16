@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Users {
   final String name;
   final String email;
-  final String phone;
   final String password;
   String uid;
   String? profileImage; // Optional profile image field
@@ -13,7 +12,6 @@ class Users {
   Users({
     required this.name,
     required this.email,
-    required this.phone,
     required this.password,
     required this.uid,
     this.profileImage,
@@ -26,7 +24,6 @@ class Users {
     return Users(
       name: json['name'],
       email: json['email'],
-      phone: json['phone'],
       password: json['password'],
       uid: json['uid'],
       profileImage: json['profileImage'], // Assign profile image from Firestore
@@ -40,7 +37,6 @@ class Users {
       'uid': uid,
       'name': name,
       'email': email,
-      'phone': phone,
       'password': password,
       'profileImage': profileImage, // Store profile image
       'address': address, // Store address
@@ -49,15 +45,15 @@ class Users {
   }
 }
 
-class PatientRepository {
+class UserRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Users>> getAllPatients() async {
+  Future<List<Users>> getAllUsers() async {
     List<Users> users = [];
 
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
-      await _db.collection('PatientMadLab').get();
+      await _db.collection('BookStoreUsers').get();
 
       users = snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
@@ -68,7 +64,7 @@ class PatientRepository {
 
       return users;
     } catch (error) {
-      print('Error fetching all patients: $error');
+      print('Error fetching all users: $error');
       return users;
     }
   }

@@ -1,6 +1,7 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Users {
+class BookStoreUser {
   final String name;
   final String email;
   final String password;
@@ -8,26 +9,24 @@ class Users {
   String? profileImage; // Optional profile image field
   String? address; // Optional address field
 
-
-  Users({
+  BookStoreUser({
     required this.name,
     required this.email,
     required this.password,
     required this.uid,
     this.profileImage,
     this.address,
-
   });
 
   // Convert Firestore data to a Patient object
-  factory Users.fromFirestore(Map<String, dynamic> json) {
-    return Users(
+  factory BookStoreUser.fromFirestore(Map<String, dynamic> json) {
+    return BookStoreUser(
       name: json['name'],
       email: json['email'],
       password: json['password'],
       uid: json['uid'],
       profileImage: json['profileImage'], // Assign profile image from Firestore
-      address: json['address'], // Assign address from Firestore
+      address: json['address'], // Convert Firestore Timestamp to DateTime
     );
   }
 
@@ -39,33 +38,32 @@ class Users {
       'email': email,
       'password': password,
       'profileImage': profileImage, // Store profile image
-      'address': address, // Store address
-
+      'address': address,
     };
   }
 }
 
-class UserRepository {
+class BookStoreUserRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Users>> getAllUsers() async {
-    List<Users> users = [];
+  Future<List<BookStoreUser>> getAllUsers() async {
+    List<BookStoreUser> bookstoreuser = [];
 
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
-      await _db.collection('BookStoreUsers').get();
+      await _db.collection('UsersBookStore').get();
 
-      users = snapshot.docs.map((doc) {
+      bookstoreuser = snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
         data['uid'] = doc.id; // Assign document ID as UID
 
-        return Users.fromFirestore(data);
+        return BookStoreUser.fromFirestore(data);
       }).toList();
 
-      return users;
+      return bookstoreuser;
     } catch (error) {
       print('Error fetching all users: $error');
-      return users;
+      return bookstoreuser;
     }
   }
 }

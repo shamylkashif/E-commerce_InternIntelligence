@@ -1,7 +1,7 @@
 import 'package:bookstore/Models/user_model.dart';
-import 'package:bookstore/screens/login-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Repository/user_repo.dart';
 import '../commons/colors.dart';
 import '../loaders.dart';
@@ -35,53 +35,43 @@ class _SignupScreenState extends State<SignupScreen> {
   void onTapSignUp(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
-        // Collect data from text controllers
         String name = _usernameController.text;
         String email = _emailController.text;
         String password = _passwordController.text;
 
-        // Create a Users object with the necessary fields
-        Users user = Users(
-          name: name,
-          email: email,
-          password: password,
-          uid: '',  // UID will be assigned after successful FirebaseAuth sign-up
+        String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+        BookStoreUser bookstoreUser = BookStoreUser(
+            name: name,
+            email: email,
+            password: password,
+            uid: uid
         );
 
-        // Check if the account already exists
-        FirestoreController().checkAccountExists(context, email).then((exists) {
-          if (exists) {
-            // Show error message if the account already exists
-            SnackbarHelper.show(context, 'Account already exists.', backgroundColor: Colors.red);
+        bool accountExists = await FirestoreController().checkAccountExists(context, email);
+        if (accountExists) {
+          SnackbarHelper.show(context, 'Account already exists.', backgroundColor: Colors.red);
+        } else {
+          bool success = await FirestoreController().signUp(context, bookstoreUser);
+          if (success) {
+            // Save email to SharedPreferences
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('userEmail', email); // Save the email
+
+            SnackbarHelper.show(context, 'Your account has been created successfully! Please continue.', backgroundColor: Colors.green);
+
+            // Navigate to Home Page
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
           } else {
-            // Sign up the user and save to Firestore
-            FirestoreController().signUp(context, user).then((success) {
-              if (success) {
-                // Show success message
-                SnackbarHelper.show(context, 'Your account has been created successfully! Please continue.', backgroundColor: Colors.green);
-
-                // Navigate to HomeScreen after successful signup
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              } else {
-                // Show error message if signup fails
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Sign up failed. Please try again.')),
-                );
-              }
-            });
+            SnackbarHelper.show(context, 'Sign up failed. Please try again.', backgroundColor: Colors.red);
           }
-        });
+        }
       } catch (e) {
-        // Show an error message if an exception occurs
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred. Please try again.')),
-        );
+        SnackbarHelper.show(context, 'An error occurred. Please try again.', backgroundColor: Colors.red);
       }
     }
   }
+
 
 
   @override
@@ -160,6 +150,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter an email';
+                            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              return 'Please enter a valid email';
                             }
                             return null;
                           },

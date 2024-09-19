@@ -2,6 +2,7 @@ import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/screens/home-pg.dart';
 import 'package:bookstore/screens/signup-screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/user_model.dart';
 import '../Repository/user_repo.dart';
 import '../forgotpassword.dart';
@@ -18,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final UserRepository _usersRepository = UserRepository();
+  final BookStoreUserRepository _usersRepository = BookStoreUserRepository();
   final FirestoreController _users = FirestoreController();
 
   bool _isPasswordVisible = false; // For show/hide password
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<bool> isUsers(String email) async {
     try {
-      List<Users> fetchedUsers = await _usersRepository.getAllUsers();
+      List<BookStoreUser> fetchedUsers = await _usersRepository.getAllUsers();
       if (fetchedUsers.isNotEmpty) {
         bool isUsers = fetchedUsers.any((user) => user.email == email);
         return isUsers;
@@ -45,7 +46,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Sign-in function
+  Future<void> _saveEmailToSharedPreferences(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', email);
+  }
+
   void _signIn(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       String email = _emailController.text;
@@ -55,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (isUsers) {
           _users.signInWithFirebaseAuth(email, password).then((success) {
             if (success) {
+              _saveEmailToSharedPreferences(email);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()),
@@ -75,10 +81,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -139,60 +141,82 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 14),
-                    // Email Field
-                    Container(
-                      width: 400,
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: TextField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Email',
-                          labelStyle: const TextStyle(color: blue),
-                          suffixIcon: const Icon(Icons.person_2, color: blue),
-                        ),
-                      ),
-                    ),
-                    // Password Field with show/hide functionality
-                    Container(
-                      width: 400,
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible, // Show/hide password
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          labelText: 'Password',
-                          labelStyle: const TextStyle(color: blue),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                              color: blue,
+                child: Form(
+                  key: _formKey, // Attach form key for validation
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 14),
+                      // Email Field
+                      Container(
+                        width: 400,
+                        height: 60,
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        child: TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            onPressed: _togglePasswordVisibility,
+                            labelText: 'Email',
+                            labelStyle: const TextStyle(color: blue),
+                            suffixIcon: const Icon(Icons.person_2, color: blue),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            // Basic email validation
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                      // Password Field with show/hide functionality
+                      Container(
+                        width: 400,
+                        height: 60,
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_isPasswordVisible, // Show/hide password
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            labelText: 'Password',
+                            labelStyle: const TextStyle(color: blue),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                color: blue,
+                              ),
+                              onPressed: _togglePasswordVisibility,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            if (value.length < 6) {
+                              return 'Password must be at least 6 characters long';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             // Login Button
             Padding(
               padding: const EdgeInsets.only(top: 415, left: 116),
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () {
-                  _signIn(context);
+                  _signIn(context); // Trigger form validation and sign-in
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 5),
@@ -218,6 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+
             // Forgot Password
             Padding(
               padding: const EdgeInsets.only(top: 465, left: 125),

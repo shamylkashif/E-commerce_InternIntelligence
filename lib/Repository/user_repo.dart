@@ -1,7 +1,7 @@
 import 'package:bookstore/Models/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../loaders.dart';
 
@@ -9,7 +9,6 @@ class FirestoreController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Sign In Functionality
   Future<bool> signInWithFirebaseAuth(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(
@@ -23,39 +22,32 @@ class FirestoreController {
     }
   }
 
-  // Sign Up and Save Data to Firestore
-  Future<bool> signUp(BuildContext context, Users users) async {
-    if (users.email.isEmpty || users.password.isEmpty) {
-      SnackbarHelper.show(context, 'Email and password cannot be empty.', backgroundColor: Colors.red.shade900);
+  Future<bool> signUp(BuildContext context, BookStoreUser bookstoreuser) async {
+    if (bookstoreuser.email.isEmpty || bookstoreuser.password.isEmpty) {
+      SnackbarHelper.show(context, 'Email and password cannot be empty.', backgroundColor: Colors.red);
       return false;
     }
 
     try {
-      bool registeredInAuth = await registerUser(users.email, users.password);
+      bool registeredInAuth = await registerUser(bookstoreuser.email, bookstoreuser.password);
 
       if (registeredInAuth) {
         User? user = _auth.currentUser;
         if (user != null) {
-          users.uid = user.uid;
+          bookstoreuser.uid = user.uid;
 
-          // Try saving user data to Firestore
-          await _db.collection("BookStoreUsers").doc(user.uid).set(users.toJson());
-
-          // Data saved successfully, return true
+          await _db.collection("UsersBookStore").doc(user.uid).set(bookstoreuser.toJson());
           return true;
         }
       } else {
-        SnackbarHelper.show(context, 'Failed to create account. Please try again.', backgroundColor: Colors.red.shade900);
+        SnackbarHelper.show(context, 'Failed to create account. Please try again.', backgroundColor: Colors.red);
       }
     } catch (error) {
-      print('Error during sign-up and Firestore save: $error');
-      SnackbarHelper.show(context, 'Something went wrong. Please try again.', backgroundColor: Colors.red.shade900);
+      SnackbarHelper.show(context, 'Something went wrong. Please try again.', backgroundColor: Colors.red);
     }
-
     return false;
   }
 
-  // Register the user in Firebase Auth
   Future<bool> registerUser(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
@@ -69,17 +61,16 @@ class FirestoreController {
     }
   }
 
-  // Check if an account with the same email exists in Firestore
   Future<bool> checkAccountExists(BuildContext context, String email) async {
     try {
       final emailQuery = await _db
-          .collection('BookStoreUsers')
+          .collection('UsersBookStore')
           .where('email', isEqualTo: email)
           .limit(1)
           .get();
 
       if (emailQuery.docs.isNotEmpty) {
-        SnackbarHelper.show(context, 'Email already exists. Please login or try another email.', backgroundColor: Colors.red.shade900);
+        SnackbarHelper.show(context, 'Email already exists. Please login or try another email.', backgroundColor: Colors.red);
         return true;
       }
       return false;
@@ -88,4 +79,5 @@ class FirestoreController {
       return false;
     }
   }
+
 }

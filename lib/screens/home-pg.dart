@@ -4,10 +4,13 @@ import 'package:bookstore/custom_tab_control.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
 import '../search_pg.dart';
 import '../my_account.dart';
+import 'chat_screen.dart';
+import 'login-screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,6 +43,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroundColor: yellow,
         iconTheme: IconThemeData(color: blue),
         elevation: 0,
+
+
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
@@ -67,7 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: blue
                   ),
                   accountName: Text('Clara Albert',
                       style: TextStyle(color: Colors.white)),
@@ -77,9 +82,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     backgroundImage: AssetImage('assets/pp.png'),
                   ),
                 ),
-                _buildDrawerItem(Icons.person, "Profile", 0),
-                _buildDrawerItem(Icons.book, "Our Books", 1),
-                _buildDrawerItem(Icons.home, "Home", 2),
+                _buildDrawerItem(Icons.home, "Home", 0),
+                _buildDrawerItem(Icons.person, "Profile", 1),
+                _buildDrawerItem(Icons.book, "Our Books", 2),
                 _buildDrawerItem(Icons.monetization_on, "Sell With Us", 3),
                 _buildDrawerItem(Icons.info, "About Us", 4),
                 _buildDrawerItem(Icons.logout, "Logout", 5),
@@ -90,7 +95,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
+  Future<void> onLogout(BuildContext context) async {
+    // Clear email from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userEmail');  // This will clear the stored email
 
+    // Redirect the user to the login screen
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),);
+  }
   ListTile _buildDrawerItem(IconData icon, String title, int index) {
     return ListTile(
       leading: Icon(

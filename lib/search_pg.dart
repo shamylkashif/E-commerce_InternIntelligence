@@ -70,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 100, left: 10, right: 10),
+            padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
             child: TextField(
               style: const TextStyle(color: Colors.black,),
               decoration: InputDecoration(

@@ -108,14 +108,22 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.price.toString(),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12
-                          ) ,
+                          child: Row(
+                            children: [
+                              Icon(Icons.star, color: blue, size: 17),
+                              SizedBox(width: 4),
+                              Text(
+                                book.rating.toString(),
+                                style: TextStyle(
+                                  color: blue,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
@@ -134,19 +142,13 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.star, color: blue, size: 17),
-                                SizedBox(width: 4),
-                                Text(
-                                  book.rating.toString(),
-                                  style: TextStyle(
-                                    color: blue,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              book.price.toString(),
+                              style: TextStyle(
+                                color: blue,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -190,14 +192,22 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.price.toString(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12
-                            ) ,
+                          child: Row(
+                            children: [
+                              Icon(Icons.star, color: blue, size: 17),
+                              SizedBox(width: 4),
+                              Text(
+                                book.rating.toString(),
+                                style: TextStyle(
+                                  color: blue,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
@@ -216,102 +226,13 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.star, color: blue, size: 17),
-                                SizedBox(width: 4),
-                                Text(
-                                  book.rating.toString(),
-                                  style: TextStyle(
-                                    color: blue,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )).toList(),
-                ),
-              ),
-              ),
-              Center(child:SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: books.map((book) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
-                            },
-                            child: Image.asset(
-                              book.imageUrl,
-                              height: 200,
-                              width: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.title,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.price.toString(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12
-                            ) ,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.author,
-                            style: TextStyle(
-                              color: Colors.grey[350],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: Colors.yellow[200],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.star, color: blue, size: 17),
-                                SizedBox(width: 4),
-                                Text(
-                                  book.rating.toString(),
-                                  style: TextStyle(
-                                    color: blue,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              book.price.toString(),
+                              style: TextStyle(
+                                color: blue,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -356,14 +277,22 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            book.price.toString(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12
-                            ) ,
+                          child: Row(
+                            children: [
+                              Icon(Icons.star, color: blue, size: 17),
+                              SizedBox(width: 4),
+                              Text(
+                                book.rating.toString(),
+                                style: TextStyle(
+                                  color: blue,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
@@ -382,19 +311,98 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                               color: Colors.yellow[200],
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.star, color: blue, size: 17),
-                                SizedBox(width: 4),
-                                Text(
-                                  book.rating.toString(),
-                                  style: TextStyle(
-                                    color: blue,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            child: Text(
+                              book.price.toString(),
+                              style: TextStyle(
+                                color: blue,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              ),
+              ),
+              Center(child:SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: books.map((book) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            },
+                            child: Image.asset(
+                              book.imageUrl,
+                              height: 200,
+                              width: 150,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Row(
+                            children: [
+                              Icon(Icons.star, color: blue, size: 17),
+                              SizedBox(width: 4),
+                              Text(
+                                book.rating.toString(),
+                                style: TextStyle(
+                                  color: blue,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            book.author,
+                            style: TextStyle(
+                              color: Colors.grey[350],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              book.price.toString(),
+                              style: TextStyle(
+                                color: blue,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

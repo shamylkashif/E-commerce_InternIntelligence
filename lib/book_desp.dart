@@ -65,19 +65,40 @@ class _BookDescriptionState extends State<BookDescription> {
                         ),
                       ),
                       SizedBox(height: 35,),
-                      TextButton(
-                          style:TextButton.styleFrom(
-                            foregroundColor: blue,
-                            backgroundColor: yellow,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)
-                            )
-                          ) ,
-                          onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
-                          },
-                          child: Text('Contact Seller')
-                      )
+                      Padding(
+                        padding: const EdgeInsets.only(left: 45, right: 45),
+                        child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                          TextButton(
+                              style:TextButton.styleFrom(
+                                  foregroundColor: blue,
+                                  backgroundColor: yellow,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)
+                                  )
+                              ) ,
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
+                              },
+                              child: Text('Contact Seller')
+                          ),
+                          TextButton(
+                              style:TextButton.styleFrom(
+                                  foregroundColor: blue,
+                                  backgroundColor: yellow,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)
+                                  )
+                              ) ,
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
+                              },
+                              child: Text('Review Seller')
+                          )
+                        ],),
+                      ),
+
+
                     ],
                   ),
                 ),

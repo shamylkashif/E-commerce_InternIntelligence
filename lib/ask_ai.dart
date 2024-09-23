@@ -17,7 +17,7 @@ class _AskAIState extends State<AskAI> {
            children: [
              Center(child: Text('Asky', style: TextStyle(fontSize: 24, color: blue),)),
              Container(
-               margin: EdgeInsets.only(top: 20,left: 120),
+               margin: EdgeInsets.only(top: 20,left: 10),
                height: 90,
                width: 90,
                decoration: BoxDecoration(

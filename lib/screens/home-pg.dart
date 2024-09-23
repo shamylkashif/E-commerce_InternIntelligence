@@ -1,6 +1,9 @@
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
+import 'package:bookstore/screens/about-us.dart';
+import 'package:bookstore/screens/our-books.dart';
+import 'package:bookstore/setting.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -35,16 +38,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _selectedIndex = index;
     });
   }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: yellow,
-        iconTheme: IconThemeData(color: blue),
-        elevation: 0,
-
-
+        leading: IconButton(
+          icon: Icon(Icons.menu), // Menu icon on the left
+          onPressed: () {
+            _scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+        actions: [
+          IconButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen()));
+              },
+              icon: Icon(Icons.chat, color: blue,))
+        ],
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
@@ -63,38 +78,37 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         index: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      drawer: ClipPath(
-        clipper: DrawerClipper(),
-        child: Drawer(
-          child: Container(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: blue
-                  ),
-                  accountName: Text('Clara Albert',
-                      style: TextStyle(color: Colors.white)),
-                  accountEmail: Text('clara21@gmail.com',
-                      style: TextStyle(color: Colors.white)),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage('assets/pp.png'),
-                  ),
+      drawer: Drawer(
+        child: Container(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: yellow
                 ),
-                _buildDrawerItem(Icons.home, "Home", 0),
-                _buildDrawerItem(Icons.person, "Profile", 1),
-                _buildDrawerItem(Icons.book, "Our Books", 2),
-                _buildDrawerItem(Icons.monetization_on, "Sell With Us", 3),
-                _buildDrawerItem(Icons.info, "About Us", 4),
-                _buildDrawerItem(Icons.logout, "Logout", 5),
-              ],
-            ),
+                accountName: Text('Clara Albert',
+                    style: TextStyle(color: Colors.black)),
+                accountEmail: Text('clara21@gmail.com',
+                    style: TextStyle(color: Colors.black)),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/pp.png'),
+                ),
+              ),
+              _buildDrawerItem(Icons.home, "Home", 0),
+              _buildDrawerItem(Icons.person, "Profile", 1),
+              _buildDrawerItem(Icons.book, "Our Books", 2),
+              _buildDrawerItem(Icons.monetization_on, "Sell With Us", 3),
+              _buildDrawerItem(Icons.info, "About Us", 4),
+              _buildDrawerItem(Icons.settings, "Settings", 5),
+              _buildDrawerItem(Icons.logout, "Logout", 6),
+            ],
           ),
         ),
       ),
     );
   }
+
   Future<void> onLogout(BuildContext context) async {
     // Clear email from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,22 +123,50 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return ListTile(
       leading: Icon(
         icon,
-        color: _selectedIndex == index
-            ? Colors.yellow[700]
-            : Colors.yellow[700],
+        color: Colors.yellow[700],
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: _selectedIndex == index ? Colors.black : Colors.black,
+          color: Colors.black,
         ),
       ),
       onTap: () {
         Navigator.pop(context);
-        _onItemTapped(index);
+        switch (index) {
+          case 0:
+            _navigateToPage(context, HomePage());
+            break;
+          case 1:
+            _navigateToPage(context, MyProfile());
+            break;
+          case 2:
+            _navigateToPage(context, OurBooks());
+            break;
+          case 3:
+            _navigateToPage(context, PostAD());
+            break;
+          case 4:
+            _navigateToPage(context, AboutUs());
+            break;
+          case 5:
+            _navigateToPage(context, Settings());
+            break;
+          case 6:
+            onLogout(context);  // Call your logout function
+            break;
+        }
       },
     );
   }
+
+  void _navigateToPage(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
 }
 
 class HomePageContent extends StatelessWidget {
@@ -343,26 +385,26 @@ class HomePageContent extends StatelessWidget {
 }
 
 // DrawerDesign
-class DrawerClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, 0);
-    path.lineTo(size.width * 0.8, 0);
-    path.quadraticBezierTo(
-      size.width,
-      size.height,
-      size.width * 0.01,
-      size.height * 1,
-    );
-
-    path.lineTo(0, size.height);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
+// class DrawerClipper extends CustomClipper<Path> {
+//   @override
+//   Path getClip(Size size) {
+//     Path path = Path();
+//     path.lineTo(0, 0);
+//     path.lineTo(size.width * 0.8, 0);
+//     path.quadraticBezierTo(
+//       size.width,
+//       size.height,
+//       size.width * 0.01,
+//       size.height * 1,
+//     );
+//
+//     path.lineTo(0, size.height);
+//     path.close();
+//     return path;
+//   }
+//
+//   @override
+//   bool shouldReclip(CustomClipper<Path> oldClipper) {
+//     return false;
+//   }
+// }

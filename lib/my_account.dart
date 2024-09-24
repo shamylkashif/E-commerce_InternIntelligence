@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/screens/login-screen.dart';
 import 'package:bookstore/screens/profile_choice.dart';
@@ -13,6 +15,15 @@ class MyProfile extends StatefulWidget {
 } 
 
 class _MyProfileState extends State<MyProfile> {
+
+  File? _profileImage;
+
+  void _updateProfileImage(File image){
+    setState(() {
+      _profileImage = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +75,12 @@ class _MyProfileState extends State<MyProfile> {
                               width: 80,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(100)),
-                                  image: DecorationImage(image: AssetImage('assets/p.jpg'))
+                                  image: DecorationImage(
+                                      image: _profileImage != null
+                                          ? FileImage(_profileImage!)
+                                          : AssetImage('assets/p.jpg') as ImageProvider,
+                                    fit: BoxFit.cover
+                                  )
                               ),
                             ),
                           ),
@@ -87,7 +103,9 @@ class _MyProfileState extends State<MyProfile> {
                                         ),
                                       ),
                                       builder: (context){
-                                        return ProfilePicChoice();
+                                        return ProfilePicChoice(
+                                          onImageSelected: _updateProfileImage,
+                                        );
                                       }
                                   );                                 },
                                 child: Icon(Icons.camera_alt_outlined, color: blue, size: 20,)),
@@ -128,19 +146,20 @@ class _MyProfileState extends State<MyProfile> {
                       value: 'claraalbert596@gmail.com',
                       icons: Icons.email),
                   EditableProfileTile(
-                      title: 'Location',
-                      value: 'Islamad',
+                      title: 'Address',
+                      value: 'Lahore',
                       icons: Icons.location_on),
                   ListTile(
                     leading:Icon(Icons.settings, color: blue,) ,
-                    title: Text(
-                      'Settings', style: TextStyle(fontSize: 14, ),
+                    title: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
+                      },
+                       child: Text(
+                        'Settings', style: TextStyle(fontSize: 17, ),
+                      ),
                     ),
-                    trailing: InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
-                        },
-                        child: Icon(Icons.edit, color: blue,)),
+
                   ),
                 ],
               ),

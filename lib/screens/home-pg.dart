@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
@@ -24,6 +26,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedIndex = 2;
+  File? _profileImage;
+  String? _downloadURL;
 
   final List<Widget> _pages = [
     SearchPage(),
@@ -91,8 +95,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     style: TextStyle(color: Colors.black)),
                 accountEmail: Text('clara21@gmail.com',
                     style: TextStyle(color: Colors.black)),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('assets/pp.png'),
+                currentAccountPicture: Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      image: DecorationImage(
+                          image: _profileImage != null
+                              ? FileImage(_profileImage!)
+                              : _downloadURL != null
+                              ? NetworkImage(_downloadURL!) as ImageProvider
+                              : AssetImage('assets/p.jpg'),
+                          fit: BoxFit.cover
+                      )
+                  ),
                 ),
               ),
               _buildDrawerItem(Icons.home, "Home", 0),
@@ -150,7 +166,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _navigateToPage(context, AboutUs());
             break;
           case 5:
-            _navigateToPage(context, Settings());
+            _navigateToPage(context, MySettings());
             break;
           case 6:
             onLogout(context);  // Call your logout function

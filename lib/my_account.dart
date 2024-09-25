@@ -1,10 +1,12 @@
 import 'dart:io';
-
+import 'package:bookstore/setting.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/screens/login-screen.dart';
 import 'package:bookstore/screens/profile_choice.dart';
-import 'package:bookstore/setting.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 
 class MyProfile extends StatefulWidget {
@@ -12,17 +14,60 @@ class MyProfile extends StatefulWidget {
 
   @override
   State<MyProfile> createState() => _MyProfileState();
-} 
+}
 
 class _MyProfileState extends State<MyProfile> {
 
   File? _profileImage;
+  String? _downloadURL;
+  bool _isUploading = false;
 
+  //Function to upload image to firebase storage
+  Future<void> _uploadProfileImage(File image)async {
+    setState(() {
+      _isUploading = true;
+    });
+    try {
+      // Get the file name
+      String fileName = basename(image.path);
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('profile_pics/$fileName');
+
+      // Upload the image
+      UploadTask uploadTask = firebaseStorageRef.putFile(image);
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      // Get the download URL
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+      // Store the download URL in Firestore or Realtime Database
+      await FirebaseFirestore.instance.collection('users').doc('user_id').update({
+        'profileImageUrl': downloadURL,
+      });
+
+      setState(() {
+        _downloadURL = downloadURL;
+        _isUploading = false;
+      });
+
+      print('Image uploaded successfully. URL: $downloadURL');
+    } catch (e) {
+      print('Error uploading image: $e');
+      setState(() {
+        _isUploading = false;
+      });
+    }
+  }
+
+ //This function is triggered when a new image is selected in ProfileChoice
   void _updateProfileImage(File image){
     setState(() {
       _profileImage = image;
     });
+    //Upload the selected image to firebase
+    _uploadProfileImage(image);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +123,9 @@ class _MyProfileState extends State<MyProfile> {
                                   image: DecorationImage(
                                       image: _profileImage != null
                                           ? FileImage(_profileImage!)
-                                          : AssetImage('assets/p.jpg') as ImageProvider,
+                                          : _downloadURL != null
+                                             ? NetworkImage(_downloadURL!) as ImageProvider
+                                             : AssetImage('assets/p.jpg'),
                                     fit: BoxFit.cover
                                   )
                               ),
@@ -137,10 +184,7 @@ class _MyProfileState extends State<MyProfile> {
                       title: 'Username',
                       value: 'Clara Albert',
                       icons: Icons.person),
-                  EditableProfileTile(
-                      title: 'Mobile Number',
-                      value: '03XZ-YYYYYYY',
-                      icons: Icons.phone_android),
+
                   EditableProfileTile(
                       title: 'Email Address',
                       value: 'claraalbert596@gmail.com',
@@ -153,7 +197,7 @@ class _MyProfileState extends State<MyProfile> {
                     leading:Icon(Icons.settings, color: blue,) ,
                     title: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Settings()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> MySettings()));
                       },
                        child: Text(
                         'Settings', style: TextStyle(fontSize: 17, ),

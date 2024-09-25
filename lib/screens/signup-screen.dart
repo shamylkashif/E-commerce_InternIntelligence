@@ -132,6 +132,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 18),
+
                         _buildTextField(
                           controller: _usernameController,
                           labelText: 'Enter UserName',

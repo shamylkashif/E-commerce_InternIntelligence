@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
 import '../search_pg.dart';
-import '../my_account.dart';
+import '../my_settings.dart';
 import 'chat_screen.dart';
 import 'login-screen.dart';
 
@@ -58,11 +58,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           },
         ),
         actions: [
+
           IconButton(
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen()));
               },
-              icon: Icon(Icons.chat, color: blue,))
+              icon: Icon(Icons.chat, color: blue,)),
+          IconButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>MySettings()));
+              },
+              icon: Icon(Icons.settings, color: blue,)),
         ],
       ),
       body: _pages[_selectedIndex],

@@ -4,7 +4,7 @@ import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
 import 'package:bookstore/screens/about-us.dart';
-import 'package:bookstore/screens/our-books.dart';
+import 'package:bookstore/screens/book-review.dart';
 import 'package:bookstore/setting.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       appBar: AppBar(
         backgroundColor: yellow,
         leading: IconButton(
-          icon: Icon(Icons.menu), // Menu icon on the left
+          icon: Icon(Icons.menu, color: blue,), // Menu icon on the left
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
           },
@@ -119,11 +119,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
-              _buildDrawerItem(Icons.book, "Our Books", 2),
-              _buildDrawerItem(Icons.monetization_on, "Sell With Us", 3),
-              _buildDrawerItem(Icons.info, "About Us", 4),
-              _buildDrawerItem(Icons.settings, "Settings", 5),
-              _buildDrawerItem(Icons.logout, "Logout", 6),
+              _buildDrawerItem(Icons.reviews, "Book Review", 2),
+              _buildDrawerItem(Icons.info, "About Us", 3),
+              _buildDrawerItem(Icons.settings, "Settings", 4),
+              _buildDrawerItem(Icons.logout, "Logout", 5),
             ],
           ),
         ),
@@ -163,18 +162,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _navigateToPage(context, MyProfile());
             break;
           case 2:
-            _navigateToPage(context, OurBooks());
+            _navigateToPage(context, BookReview());
             break;
           case 3:
-            _navigateToPage(context, PostAD());
-            break;
-          case 4:
             _navigateToPage(context, AboutUs());
             break;
-          case 5:
+          case 4:
             _navigateToPage(context, MySettings());
             break;
-          case 6:
+          case 5:
             onLogout(context);  // Call your logout function
             break;
         }
@@ -406,27 +402,3 @@ class HomePageContent extends StatelessWidget {
   }
 }
 
-// DrawerDesign
-// class DrawerClipper extends CustomClipper<Path> {
-//   @override
-//   Path getClip(Size size) {
-//     Path path = Path();
-//     path.lineTo(0, 0);
-//     path.lineTo(size.width * 0.8, 0);
-//     path.quadraticBezierTo(
-//       size.width,
-//       size.height,
-//       size.width * 0.01,
-//       size.height * 1,
-//     );
-//
-//     path.lineTo(0, size.height);
-//     path.close();
-//     return path;
-//   }
-//
-//   @override
-//   bool shouldReclip(CustomClipper<Path> oldClipper) {
-//     return false;
-//   }
-// }

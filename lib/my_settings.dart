@@ -61,14 +61,14 @@ class _MyProfileState extends State<MyProfile> {
 
 
   // Pick profile image from the gallery
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);  // Set the selected image locally
-      });
-    }
-  }
+  // Future<void> _pickImage() async {
+  //   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _profileImage = File(pickedFile.path);  // Set the selected image locally
+  //     });
+  //   }
+  // }
 
   // Upload profile image to Firebase Storage
   Future<String?> _uploadProfileImage() async {

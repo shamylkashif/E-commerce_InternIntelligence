@@ -188,18 +188,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 }
 
 class HomePageContent extends StatelessWidget {
-  final List book = [
-    {
-      'imagePath': 'assets/slider/A million.webp',
-    },
-    {
-      'imagePath': 'assets/slider/Harry.jpeg',
-    },
-    {
-      'imagePath': 'assets/slider/The design.png',
-    },
-  ];
 
+  //PopularBooks List
   final List<Map<String, dynamic>> pBook = [
     {
       'image': 'assets/slider/memory.jpeg',
@@ -218,6 +208,12 @@ class HomePageContent extends StatelessWidget {
       'rating': 4.7,
       'title': 'Soul',
       'author': 'Olivia Wilson',
+    },
+    {
+      'image': 'assets/slider/The design.png',
+      'rating': 4.2,
+      'title': 'The Design',
+      'author': 'Debbie Berne',
     },
   ];
 

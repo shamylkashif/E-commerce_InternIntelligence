@@ -30,16 +30,24 @@ class _AskAIState extends State<AskAI> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Text(
-              'ASKY',
-              style: TextStyle(fontSize: 24, color: blue),
-            ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Icon(Icons.android_outlined, size: 100),
+              ),
+              SizedBox(width: 40,),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Text(
+                  'ASKY',
+                  style: TextStyle(fontSize: 24, color: blue),
+                ),
+              ),
+
+            ],
           ),
-          const Center(
-            child: Icon(Icons.android_outlined, size: 100),
-          ),
+
 
           // Chat UI
           Expanded(

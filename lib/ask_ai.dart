@@ -33,10 +33,10 @@ class _AskAIState extends State<AskAI> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Icon(Icons.android_outlined, size: 100),
+                padding: const EdgeInsets.only(left: 30),
+                child: Icon(Icons.android_outlined, size: 100, color: blue,),
               ),
-              SizedBox(width: 40,),
+              SizedBox(width: 20,),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
@@ -86,13 +86,18 @@ class _AskAIState extends State<AskAI> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                       hintText: 'Type your message...',
                         hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
                         focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide(color: blue),
                         ),
                         enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide(color: Colors.grey),
                         )
                     ),

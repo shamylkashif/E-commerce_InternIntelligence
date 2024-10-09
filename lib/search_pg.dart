@@ -79,7 +79,7 @@ class _SearchPageState extends State<SearchPage> {
                 labelText: 'Search book',
                 labelStyle: const TextStyle(color: Color(0xFF0A4DA2)),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 prefixIcon: const Icon(Icons.search, color: Color(0xFF0A4DA2)),
                 focusedBorder: const OutlineInputBorder(
@@ -143,56 +143,47 @@ class _SearchPageState extends State<SearchPage> {
                   crossAxisCount: 2,  // Number of columns
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
+                  childAspectRatio: 0.65, // Adjust this ratio to control the size of the grid items
                 ),
                 itemBuilder: (context, index) {
                   final book = books[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: AspectRatio(
-                            aspectRatio : 3/4,
-                            child: GestureDetector(
-                              onTap: (){
-                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDescription()));
-                                                 },
-                              child: Image.asset(
-                                book['imageUrl']! ,
-                                fit: BoxFit.cover,
-                              ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                          },
+                          child: SizedBox(
+                            height: 225,  // Fixed height for the image
+                            width: double.infinity,  // Ensure the image takes full width
+                            child: Image.asset(
+                              book['imageUrl'] ?? 'assets/slider/Harry.jpeg',
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            book['title']! ,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8), // Add some spacing between image and text
+                      Flexible(
+                         child: Text(
+                          book['title'] ?? 'Unknown',
+                          style: const TextStyle(
+                            color: blue,
+                            fontSize: 14,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis, // Text will be truncated if too long
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 },
               ),
             ),
-          ),
+          )
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/material.dart';
 
 class MyChat extends StatefulWidget {
@@ -82,23 +83,17 @@ class _MyChatState extends State<MyChat> {
                   onPressed: () {},
                   icon: Icon(
                     Icons.camera_alt_outlined,
-                    color: Colors.black,
+                    color: blue,
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(
                     Icons.emoji_emotions,
-                    color: Colors.black,
+                    color: blue,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.attach_file_rounded,
-                    color: Colors.black,
-                  ),
-                ),
+
                 SizedBox(
                   width: 10,
                 ),
@@ -107,6 +102,7 @@ class _MyChatState extends State<MyChat> {
                     controller: _controller,
                     decoration: InputDecoration(
                       hintText: 'Type your message here',
+                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
                       filled: true,
                       fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
@@ -117,7 +113,7 @@ class _MyChatState extends State<MyChat> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: Icon(Icons.send, color: blue,),
                   onPressed: () {
                     // Implement send functionality here
                   },

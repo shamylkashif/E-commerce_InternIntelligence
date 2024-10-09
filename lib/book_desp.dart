@@ -93,7 +93,7 @@ class _BookDescriptionState extends State<BookDescription> {
                               onPressed: (){
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
                               },
-                              child: Text('Review Seller')
+                              child: Text('Book Review')
                           )
                         ],),
                       ),

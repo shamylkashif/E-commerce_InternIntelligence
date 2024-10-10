@@ -12,6 +12,7 @@ class _AboutUsState extends State<AboutUs> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
     );
   }
 }

@@ -11,6 +11,10 @@ class PostAD extends StatefulWidget {
 
 class _PostADState extends State<PostAD> {
   String? conditionValue;
+  String? selectedCategory;
+
+  //List of Categories
+  List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +27,52 @@ class _PostADState extends State<PostAD> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Category Section
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.orange,
-                    radius: 24,
-                    child: Icon(Icons.book, color: Colors.white),
-                  ),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Books",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: blue,
-                        ),
+              RichText(
+                  text: TextSpan(
+                    text: 'Select Category',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
                       ),
-                      Text(
-                        "Fiction, Non-fiction, etc.",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
+                    ]
                   ),
-                ],
+                  ),
+              SizedBox(height: 8),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey)
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    hint: Text(
+                      'Select Category',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    value: selectedCategory,
+                    isExpanded: true,
+                    items: categories.map((String category)
+                     {
+                       return DropdownMenuItem<String>(
+                         value: category,
+                         child: Text(category),
+                       );
+                     }
+                    ).toList(),
+                    onChanged: (newValue) { setState(() {
+                      selectedCategory = newValue;
+                    });},
+                    icon: Icon(Icons.arrow_drop_down, color: blue),
+                      style: TextStyle(color: blue, fontSize: 16),
+                      dropdownColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 16,),
 
               // Image Upload Section
               Container(
@@ -88,7 +110,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Book Title
-              Text("Book Title *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Book Title',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -107,7 +140,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Author
-              Text("Author *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Author',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -126,7 +170,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Price
-              Text("Price *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Price',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -146,7 +201,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Number of Pages
-              Text("Number of Pages *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Number of Pages',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -166,7 +232,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Language
-              Text("Language *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Language',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -185,7 +262,18 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 16),
 
               // Condition
-              Text("Condition *", style: TextStyle(color: blue)),
+              RichText(
+                text: TextSpan(
+                    text: 'Condition',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
               Row(
                 children: [
                   ChoiceChip(

@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
           IconButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPreviewScreen()));
               },
               icon: Icon(Icons.chat, color: blue,)),
           IconButton(

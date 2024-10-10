@@ -345,7 +345,7 @@ class _EditableProfileTileState extends State<EditableProfileTile> {
           : Text(widget.controller.text, style: TextStyle(fontSize: 17)),
       trailing: widget.isEditable // Only show edit button if the field is editable
           ? IconButton(
-        icon: Icon(isEditing ? Icons.check : Icons.edit, color: blue),
+           icon: Icon(isEditing ? Icons.check : Icons.edit, color: blue),
         onPressed: () {
           setState(() {
             isEditing = !isEditing;

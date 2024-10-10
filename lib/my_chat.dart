@@ -16,10 +16,10 @@ class _MyChatState extends State<MyChat> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 90,
-        backgroundColor: Colors.white,
+        backgroundColor: blue,
         elevation: 10,
         leading: Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 3),
+          padding: const EdgeInsets.only(top: 8.0, left: 5, right: 5),
           child: CircleAvatar(
             radius: 20,
             backgroundImage: AssetImage("assets/ppp.jpeg"),
@@ -30,7 +30,7 @@ class _MyChatState extends State<MyChat> {
           children: [
             Text(
               "Shamyl",
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             Text(
               "Online",
@@ -62,7 +62,7 @@ class _MyChatState extends State<MyChat> {
             },
             icon: Icon(
               Icons.more_vert_outlined,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ],

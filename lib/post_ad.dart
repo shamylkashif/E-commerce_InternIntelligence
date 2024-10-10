@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
+import 'package:flutter/services.dart';
 
 
 class PostAD extends StatefulWidget {
@@ -12,6 +13,7 @@ class PostAD extends StatefulWidget {
 class _PostADState extends State<PostAD> {
   String? conditionValue;
   String? selectedCategory;
+  bool isChecked = false;
 
   //List of Categories
   List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
@@ -136,6 +138,8 @@ class _PostADState extends State<PostAD> {
                     borderSide: BorderSide(color: Colors.grey),
                   )
                 ),
+                maxLines: 1,
+                inputFormatters: [LengthLimitingTextInputFormatter(20)],
               ),
               SizedBox(height: 16),
 
@@ -166,6 +170,8 @@ class _PostADState extends State<PostAD> {
                       borderSide: BorderSide(color: Colors.grey),
                     )
                 ),
+                maxLines: 1,
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
               SizedBox(height: 16),
 
@@ -197,6 +203,8 @@ class _PostADState extends State<PostAD> {
                       borderSide: BorderSide(color: Colors.grey),
                     )
                 ),
+                maxLines: 1,
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
               SizedBox(height: 16),
 
@@ -228,6 +236,8 @@ class _PostADState extends State<PostAD> {
                       borderSide: BorderSide(color: Colors.grey),
                     )
                 ),
+                maxLines: 1,
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
               SizedBox(height: 16),
 
@@ -258,8 +268,51 @@ class _PostADState extends State<PostAD> {
                       borderSide: BorderSide(color: Colors.grey),
                     )
                 ),
+                maxLines: 1,
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
               SizedBox(height: 16),
+
+
+              //Book Description
+              RichText(
+                text: TextSpan(
+                    text: 'Book Description',
+                    style: TextStyle(fontSize: 14,color: blue),
+                    children:  [
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red[900]),
+                      ),
+                    ]
+                ),
+              ),
+              Container(
+                height: 100,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Write Book Description",
+                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: blue),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      )
+                  ),
+                  maxLines: null,
+                  minLines: null,
+                  expands: true,
+                  textAlignVertical: TextAlignVertical.top,
+                ),
+              ),
+              SizedBox(height: 16),
+
 
               // Condition
               RichText(
@@ -284,6 +337,8 @@ class _PostADState extends State<PostAD> {
                         conditionValue = selected ? "GOOD" : null;
                       });
                     },
+                    selectedColor: yellow,
+                    backgroundColor: Colors.grey[300],
                   ),
                   SizedBox(width: 8),
                   ChoiceChip(
@@ -294,12 +349,30 @@ class _PostADState extends State<PostAD> {
                         conditionValue = selected ? "SATISFACTORY" : null;
                       });
                     },
+                    selectedColor: yellow,
+                    backgroundColor: Colors.grey[300],
                   ),
                 ],
               ),
               SizedBox(height: 16),
 
-              // Next Button
+              //Checkbox Location
+
+              CheckboxListTile(
+                  title:Text('Use my current Location', style: TextStyle(color: blue),),
+                  value: isChecked,
+                  onChanged: (bool? value){
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: yellow,
+                  checkColor: blue,
+              ),
+
+              // Save Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -307,7 +380,7 @@ class _PostADState extends State<PostAD> {
                   onPressed: () {
                     // Next button functionality
                   },
-                  child: Text("Next", style: TextStyle(color: blue),),
+                  child: Text("Save", style: TextStyle(color: blue),),
                 ),
               ),
             ],

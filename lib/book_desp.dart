@@ -1,4 +1,5 @@
 import 'package:bookstore/commons/colors.dart';
+import 'package:bookstore/screens/seller-info.dart';
 import 'package:flutter/material.dart';
 
 import 'my_chat.dart';
@@ -78,8 +79,16 @@ class _BookDescriptionState extends State<BookDescription> {
                                   )
                               ) ,
                               onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
+                                showModalBottomSheet(
+                                    context: context,
+                                    showDragHandle: true,
+                                    isDismissible: true,
+                                    builder: (context){
+                                      return SellerInformation();
+                                    }
+                                );
                               },
+
                               child: Text('Seller Information')
                           ),
                           TextButton(

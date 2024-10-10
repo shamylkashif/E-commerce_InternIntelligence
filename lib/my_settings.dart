@@ -228,7 +228,6 @@ class _MyProfileState extends State<MyProfile> {
                                       borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(15),
                                           bottom: Radius.circular(15)
-
                                       ),
                                     ),
                                     builder: (context) {

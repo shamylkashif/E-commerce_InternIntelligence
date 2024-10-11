@@ -21,8 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final BookStoreUserRepository _usersRepository = BookStoreUserRepository();
   final FirestoreController _users = FirestoreController();
-
-  bool _isPasswordVisible = false; // For show/hide password
+  bool _isPasswordVisible = false;// For show/hide password
 
   // Function to toggle password visibility
   void _togglePasswordVisibility() {
@@ -80,7 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
   }
-
 
   @override
   void dispose() {
@@ -231,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  child: const Text(
+                  child:  const Text(
                     "Login",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,

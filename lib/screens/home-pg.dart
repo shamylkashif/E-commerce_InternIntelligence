@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
 import '../search_pg.dart';
-import '../my_settings.dart';
+import '../my_profile.dart';
 import 'chat_screen.dart';
 import 'login-screen.dart';
 

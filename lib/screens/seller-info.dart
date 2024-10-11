@@ -16,6 +16,7 @@ class _SellerInformationState extends State<SellerInformation> {
         height: 500,
         width: double.infinity,
         color: Colors.white,
+        
       ),
     );
   }

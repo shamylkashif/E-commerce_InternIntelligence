@@ -284,12 +284,12 @@ class _MyProfileState extends State<MyProfile> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: yellow, // Set background color to yellow
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      minimumSize: Size(100, 50), // Set the width (200) and height (50)
+                      minimumSize: Size(80, 40), // Set the width (200) and height (50)
                     ),
                     child: isLoading
-                        ? CircularProgressIndicator(color: Colors.blue) // Change spinner color to blue
+                        ? CircularProgressIndicator(color: blue,) // Change spinner color to blue
                         : Text(
                       'Save Profile',
                       style: TextStyle(

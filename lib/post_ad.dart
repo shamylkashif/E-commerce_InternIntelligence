@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/services.dart';
@@ -11,12 +12,54 @@ class PostAD extends StatefulWidget {
 }
 
 class _PostADState extends State<PostAD> {
-  String? conditionValue;
+  String? selectedCondition;
   String? selectedCategory;
   bool isChecked = false;
 
   //List of Categories
   List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
+
+  //List of Conditions
+  List<String> conditions = ['New', 'Like New', 'Used-Good', 'Used-Acceptable'];
+
+  //Text Controllers for form fields
+  TextEditingController titleController = TextEditingController();
+  TextEditingController authorController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController pagesController = TextEditingController();
+  TextEditingController languageController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  Future<void> _saveData() async {
+    //Create map to save data
+    Map<String, dynamic> bookData = {
+      'category': selectedCategory,
+      'title': titleController.text,
+      'author': authorController.text,
+      'price': priceController.text,
+      'pages': pagesController.text,
+      'language': languageController.text,
+      'description': descriptionController.text,
+      'condition': selectedCondition ?? '',
+      'useLocation': isChecked,
+    };
+    try {
+      // Add data to firebase
+      await FirebaseFirestore.instance.collection('books').add(bookData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Book Details saved Successfully'),
+          backgroundColor: Colors.green[700],),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save book details: $e'),
+          backgroundColor: Colors.red,),
+      );
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +168,7 @@ class _PostADState extends State<PostAD> {
                 ),
               ),
               TextFormField(
+                controller: titleController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter book title",
@@ -157,6 +201,7 @@ class _PostADState extends State<PostAD> {
                 ),
               ),
               TextFormField(
+                controller: authorController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter author's name",
@@ -189,6 +234,7 @@ class _PostADState extends State<PostAD> {
                 ),
               ),
               TextFormField(
+                controller: priceController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -222,6 +268,7 @@ class _PostADState extends State<PostAD> {
                 ),
               ),
               TextFormField(
+                controller: pagesController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -255,6 +302,7 @@ class _PostADState extends State<PostAD> {
                 ),
               ),
               TextFormField(
+                controller: languageController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter language",
@@ -294,6 +342,7 @@ class _PostADState extends State<PostAD> {
                   color: Colors.white,
                 ),
                 child: TextFormField(
+                  controller: descriptionController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Write Book Description",
@@ -327,34 +376,24 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              Row(
-                children: [
-                  ChoiceChip(
-                    label: Text("GOOD"),
-                    selected: conditionValue == "GOOD",
-                    onSelected: (selected) {
-                      setState(() {
-                        conditionValue = selected ? "GOOD" : null;
-                      });
-                    },
-                    selectedColor: yellow,
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  SizedBox(width: 8),
-                  ChoiceChip(
-                    label: Text("SATISFACTORY"),
-                    selected: conditionValue == "SATISFACTORY",
-                    onSelected: (selected) {
-                      setState(() {
-                        conditionValue = selected ? "SATISFACTORY" : null;
-                      });
-                    },
-                    selectedColor: yellow,
-                    backgroundColor: Colors.grey[300],
-                  ),
-                ],
+              Wrap(
+                spacing: 8,
+                children: conditions.map((String condition){
+                    return ChoiceChip(
+                        label: Text(condition),
+                        selected: selectedCondition == condition,
+                        onSelected: (bool selected){
+                          setState(() {
+                            selectedCondition = selected ? condition : null ;
+                          });
+                        },
+                      selectedColor: yellow,
+                      backgroundColor: Colors.grey[200],
+                    );
+                  }).toList(),
               ),
-              SizedBox(height: 16),
+
+              SizedBox(height: 10),
 
               //Checkbox Location
 

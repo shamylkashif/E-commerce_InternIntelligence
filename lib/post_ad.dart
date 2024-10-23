@@ -1,7 +1,14 @@
+import 'dart:core';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 
 
 class PostAD extends StatefulWidget {
@@ -15,6 +22,43 @@ class _PostADState extends State<PostAD> {
   String? selectedCondition;
   String? selectedCategory;
   bool isChecked = false;
+  File? _image;
+  String? imagePath;
+
+  final ImagePicker _picker = ImagePicker();
+
+  //Pick image from gallery
+  Future<void> _pickImageFromGallery() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  //Pick image from camera
+  Future<void> _pickImageFromCamera() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  //Upload image to firebase and get the download URL
+  Future<String?> _uploadImageToFirebase(File imageFile) async{
+    try{
+      String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+      Reference ref = FirebaseStorage.instance.ref().child('book_images/$fileName');
+      await ref.putFile(imageFile);
+      String downloadURL = await ref.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      print('Error Uploading Image: $e');
+    }
+  }
 
   //List of Categories
   List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
@@ -29,8 +73,11 @@ class _PostADState extends State<PostAD> {
   TextEditingController pagesController = TextEditingController();
   TextEditingController languageController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  //String? imageUrl = _image != null ? await _uploadImageToFirebase(_image!) : null;
 
   Future<void> _saveData() async {
+    String? imageUrl = _image != null ? await _uploadImageToFirebase(_image!) : null;
+
     //Create map to save data
     Map<String, dynamic> bookData = {
       'category': selectedCategory,
@@ -42,6 +89,7 @@ class _PostADState extends State<PostAD> {
       'description': descriptionController.text,
       'condition': selectedCondition ?? '',
       'useLocation': isChecked,
+      'imageUrl': imageUrl,
     };
     try {
       // Add data to firebase
@@ -139,7 +187,27 @@ class _PostADState extends State<PostAD> {
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(side: BorderSide(color: blue)),
                       onPressed: () {
-                        // Add images functionality
+                         AwesomeDialog(
+                           context: context,
+                           dialogType: DialogType.question,
+                           animType: AnimType.scale,
+                           title: 'Select Image',
+                           titleTextStyle: TextStyle(),
+                           desc: 'Choose an option to upload image',
+                           descTextStyle: TextStyle(),
+                           btnOkText: 'Gallery',
+                           btnOkColor: blue,
+                           btnOkIcon: Icons.photo_library,
+                           btnOkOnPress: (){
+                             _pickImageFromGallery();
+                           },
+                           btnCancelText: 'Camera',
+                           btnCancelColor: blue,
+                           btnCancelIcon: Icons.camera_alt,
+                           btnCancelOnPress: (){
+                             _pickImageFromCamera();
+                           },
+                         ).show();
                       },
                       child: Text("Add images", style: TextStyle(color: blue),),
                     ),
@@ -417,7 +485,7 @@ class _PostADState extends State<PostAD> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: yellow),
                   onPressed: () {
-                    // Next button functionality
+                    _saveData();
                   },
                   child: Text("Save", style: TextStyle(color: blue),),
                 ),

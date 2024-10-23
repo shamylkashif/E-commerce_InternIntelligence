@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'loaders.dart';
@@ -59,15 +58,6 @@ class _MyProfileState extends State<MyProfile> {
   }
 
 
-  // Pick profile image from the gallery
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _profileImage = File(pickedFile.path);  // Set the selected image locally
-  //     });
-  //   }
-  // }
 
   // Upload profile image to Firebase Storage
   Future<String?> _uploadProfileImage() async {

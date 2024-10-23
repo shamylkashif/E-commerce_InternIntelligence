@@ -14,41 +14,31 @@ class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backGround,
       body: Stack(
         children: [
           // Custom AppBar
-          Positioned(
-            top: 70, // Adjust this value to move the app bar downward
-            left: 0,
-            right: 0,
-            child: Container(
-              color: backGround, // Same background color as AppBar
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Icon(Icons.arrow_back_ios, color: blue),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        'About us',
-                        style: TextStyle(color: blue, fontSize: 24),
-                      ),
-                    ),
-                  ),
-                ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80, left: 15),
+                  child: Icon(Icons.arrow_back_ios, color: blue),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 80, left: 95),
+                child: Text(
+                  'About us',
+                  style: TextStyle(color: blue, fontSize: 24),
+                ),
+              ),
+            ],
           ),
+
 
           // Main content below the AppBar
           Padding(

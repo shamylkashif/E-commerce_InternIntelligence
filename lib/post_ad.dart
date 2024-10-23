@@ -58,6 +58,7 @@ class _PostADState extends State<PostAD> {
     } catch (e) {
       print('Error Uploading Image: $e');
     }
+    
   }
 
   //List of Categories

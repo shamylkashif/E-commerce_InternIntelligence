@@ -15,8 +15,13 @@ class _SellerInformationState extends State<SellerInformation> {
       body: Container(
         height: 500,
         width: double.infinity,
-        color: Colors.white,
-        
+        child: Column(
+          children: [
+            Container(
+
+            ),
+          ],
+        ),
       ),
     );
   }

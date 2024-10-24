@@ -4,7 +4,6 @@ import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
 import 'package:bookstore/screens/about-us.dart';
-import 'package:bookstore/screens/book-review.dart';
 import 'package:bookstore/setting.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
+import '../read_review.dart';
 import '../search_pg.dart';
 import '../my_profile.dart';
 import 'chat_screen.dart';
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
-              _buildDrawerItem(Icons.reviews, "Book Review", 2),
+              _buildDrawerItem(Icons.reviews, "Read Review", 2),
               _buildDrawerItem(Icons.info, "About Us", 3),
               _buildDrawerItem(Icons.settings, "Settings", 4),
               _buildDrawerItem(Icons.logout, "Logout", 5),
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _navigateToPage(context, MyProfile());
             break;
           case 2:
-            _navigateToPage(context, BookReview());
+            _navigateToPage(context, ReadReview());
             break;
           case 3:
             _navigateToPage(context, AboutUs());

@@ -1,7 +1,7 @@
 import 'package:bookstore/commons/colors.dart';
+import 'package:bookstore/screens/book-review.dart';
 import 'package:bookstore/screens/seller-info.dart';
 import 'package:flutter/material.dart';
-import 'my_chat.dart';
 
 class BookDescription extends StatefulWidget {
   const BookDescription({super.key});
@@ -99,9 +99,9 @@ class _BookDescriptionState extends State<BookDescription> {
                                   )
                               ) ,
                               onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyChat()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>BookReview()));
                               },
-                              child: Text('Book Review')
+                              child: Text('Write Review')
                           )
                         ],),
                       ),

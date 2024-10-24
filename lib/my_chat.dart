@@ -18,25 +18,20 @@ class _MyChatState extends State<MyChat> {
         toolbarHeight: 90,
         backgroundColor: blue,
         elevation: 10,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 5, right: 5),
-          child: CircleAvatar(
+        leading: GestureDetector(
+            onTap: (){
+             Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+        title: ListTile(
+          leading: CircleAvatar(
             radius: 20,
-            backgroundImage: AssetImage("assets/ppp.jpeg"),
+            backgroundImage: AssetImage('assets/images/profile_placeholder.png'),
           ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Shamyl",
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            Text(
-              "Online",
-              style: TextStyle(fontSize: 14, color: Colors.green),
-            ),
-          ],
+          title: Text('Shamyl',
+            style:TextStyle(fontSize: 16, color: Colors.white) ,),
+          subtitle: Text('Online',
+            style:TextStyle(fontSize: 14, color: Colors.green) ,),
         ),
         actions: [
           PopupMenuButton<String>(

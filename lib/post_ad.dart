@@ -61,6 +61,11 @@ class _PostADState extends State<PostAD> {
     
   }
 
+  // Future<void>updateBookImage(String currentUserUID, String imageURL)async{
+  //   await FirebaseFirestore.instance.collection('books').doc(currentUserUID).update(
+  //       {'profileImage': imageURL});
+  // }
+
   //List of Categories
   List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
 

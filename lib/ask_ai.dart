@@ -33,7 +33,7 @@ class _AskAIState extends State<AskAI> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 30),
+                padding: const EdgeInsets.only(left: 80),
                 child: Icon(Icons.android_outlined, size: 100, color: blue,),
               ),
               SizedBox(width: 20,),

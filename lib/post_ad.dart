@@ -1,13 +1,20 @@
 import 'dart:core';
+import 'dart:math';
+import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:bookstore/search_pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+
+import 'loaders.dart';
 
 
 
@@ -24,8 +31,26 @@ class _PostADState extends State<PostAD> {
   bool isChecked = false;
   File? _image;
   String? imagePath;
+  String? bookId;
+  String? currentUID;
+  bool isLoading = false; // To track loading state
 
   final ImagePicker _picker = ImagePicker();
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUserUID();
+  }
+
+  // Function to get the current user UID
+  Future<void> _getCurrentUserUID() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        currentUID = user.uid;
+      });
+    }
+  }
 
   //Pick image from gallery
   Future<void> _pickImageFromGallery() async {
@@ -33,7 +58,23 @@ class _PostADState extends State<PostAD> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        imagePath = pickedFile.path;
       });
+
+      // Show image in AwesomeDialog
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.noHeader,
+        animType: AnimType.scale,
+        body: Column(
+          children: [
+            Image.file(_image!, width: 100, height: 100), // Display picked image
+            const SizedBox(height: 10),
+            const Text('Image from Gallery'),
+          ],
+        ),
+        btnOkOnPress: () {},
+      ).show();
     }
   }
 
@@ -43,28 +84,79 @@ class _PostADState extends State<PostAD> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        imagePath = pickedFile.path;
       });
+
+      // Show image in AwesomeDialog
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.noHeader,
+        animType: AnimType.scale,
+        body: Column(
+          children: [
+            Image.file(_image!, width: 100, height: 100), // Display picked image
+            const SizedBox(height: 10),
+            const Text('Image from Camera'),
+          ],
+        ),
+        btnOkOnPress: () {},
+      ).show();
     }
+  }
+  // Generate a unique BookID
+  String _generateBookId() {
+    final random = Random();
+    final int randomNumber = random.nextInt(10000); // Random number between 0 and 9999
+    return 'Book-$randomNumber';
+  }
+
+  // Fetch current location when checkbox is checked
+  // Get the user's current location
+  Future<Position?> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return null;
+    }
+
+    // Request location permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permission denied.');
+        return null;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print('Location permissions are permanently denied.');
+      return null;
+    }
+
+    // Get the current position
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return position;
   }
 
   //Upload image to firebase and get the download URL
-  Future<String?> _uploadImageToFirebase(File imageFile) async{
-    try{
+  Future<String?> _uploadImageToFirebase(File imageFile) async {
+    try {
       String fileName = DateTime.now().microsecondsSinceEpoch.toString();
       Reference ref = FirebaseStorage.instance.ref().child('book_images/$fileName');
       await ref.putFile(imageFile);
       String downloadURL = await ref.getDownloadURL();
       return downloadURL;
     } catch (e) {
-      print('Error Uploading Image: $e');
+      print('Error uploading image: $e');
     }
-    
   }
 
-  // Future<void>updateBookImage(String currentUserUID, String imageURL)async{
-  //   await FirebaseFirestore.instance.collection('books').doc(currentUserUID).update(
-  //       {'profileImage': imageURL});
-  // }
+
 
   //List of Categories
   List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
@@ -81,10 +173,73 @@ class _PostADState extends State<PostAD> {
   TextEditingController descriptionController = TextEditingController();
   //String? imageUrl = _image != null ? await _uploadImageToFirebase(_image!) : null;
 
-  Future<void> _saveData() async {
-    String? imageUrl = _image != null ? await _uploadImageToFirebase(_image!) : null;
 
-    //Create map to save data
+  Future<void> _saveData() async {
+    // Validate required fields
+    if (selectedCategory == null || selectedCategory!.isEmpty) {
+      SnackbarHelper.show(context, 'Please select a category', backgroundColor: Colors.red);
+      return;
+    }
+    if (_image == null) {
+      SnackbarHelper.show(context, 'Please upload an image', backgroundColor: Colors.red);
+      return;
+    }
+    if (titleController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the book title', backgroundColor: Colors.red);
+      return;
+    }
+    if (authorController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the author\'s name', backgroundColor: Colors.red);
+      return;
+    }
+    if (priceController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the price', backgroundColor: Colors.red);
+      return;
+    }
+    if (pagesController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the number of pages', backgroundColor: Colors.red);
+      return;
+    }
+    if (languageController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the language', backgroundColor: Colors.red);
+      return;
+    }
+    if (descriptionController.text.isEmpty) {
+      SnackbarHelper.show(context, 'Please enter the description', backgroundColor: Colors.red);
+      return;
+    }
+    if (selectedCondition == null || selectedCondition!.isEmpty) {
+      SnackbarHelper.show(context, 'Please select the condition of the book', backgroundColor: Colors.red);
+      return;
+    }
+    if (!isChecked) {
+      SnackbarHelper.show(context, 'Location is required', backgroundColor: Colors.red);
+      return;
+    }
+    setState(() {
+      isLoading = true; // Show loader
+    });
+
+    // Get current location
+    Position? position = await _getCurrentLocation();
+    if (position == null) {
+      SnackbarHelper.show(context, 'Unable to get location.', backgroundColor: Colors.red);
+      setState(() {
+        isLoading = false; // Hide loader
+      });
+      return;
+    }
+
+    // Prepare location as a GeoPoint
+    GeoPoint currentLocation = GeoPoint(position.latitude, position.longitude);
+
+    // Upload image to Firebase
+    String? imageUrl = await _uploadImageToFirebase(_image!);
+
+    // Create a unique Book ID
+    String bookID = 'Book-${DateTime.now().millisecondsSinceEpoch}';
+
+    // Create a map to save data
     Map<String, dynamic> bookData = {
       'category': selectedCategory,
       'title': titleController.text,
@@ -93,33 +248,34 @@ class _PostADState extends State<PostAD> {
       'pages': pagesController.text,
       'language': languageController.text,
       'description': descriptionController.text,
-      'condition': selectedCondition ?? '',
+      'condition': selectedCondition,
       'useLocation': isChecked,
       'imageUrl': imageUrl,
+      'uid': currentUID,
+      'bookID': bookID,
+      'currentLocation': currentLocation,
     };
+
     try {
-      // Add data to firebase
-      await FirebaseFirestore.instance.collection('books').add(bookData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Book Details saved Successfully'),
-          backgroundColor: Colors.green[700],),
-      );
+      await FirebaseFirestore.instance.collection('AllBooks').add(bookData);
+      SnackbarHelper.show(context, 'Book data saved successfully', backgroundColor: Colors.green);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save book details: $e'),
-          backgroundColor: Colors.red,),
-      );
+      SnackbarHelper.show(context, 'Failed to save book: $e', backgroundColor: Colors.red);
+    } finally {
+      setState(() {
+        isLoading = false; // Hide loader
+      });
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
+      body: Stack(
+          children: [
+           Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -470,19 +626,21 @@ class _PostADState extends State<PostAD> {
               SizedBox(height: 10),
 
               //Checkbox Location
-
               CheckboxListTile(
-                  title:Text('Use my current Location', style: TextStyle(color: blue),),
-                  value: isChecked,
-                  onChanged: (bool? value){
-                    setState(() {
-                      isChecked = value!;
-                    });
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: yellow,
-                  checkColor: blue,
+                title: const Text('Use my current Location', style: TextStyle(color: blue)),
+                value: isChecked,
+                onChanged: (newValue) async {
+                  setState(() {
+                    isChecked = newValue!;
+                  });
+                  if (isChecked) {
+                    await _getCurrentLocation();
+                  }
+                },
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                activeColor: yellow,
+                checkColor: blue,
               ),
 
               // Save Button
@@ -499,6 +657,18 @@ class _PostADState extends State<PostAD> {
             ],
           ),
         ),
+      ),
+            if (isLoading)
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+        ]
       ),
     );
   }

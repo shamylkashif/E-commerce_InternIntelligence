@@ -1,17 +1,18 @@
-import 'dart:io';
 
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
 import 'package:bookstore/screens/about-us.dart';
+import 'package:bookstore/screens/book-review.dart';
 import 'package:bookstore/setting.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ask_ai.dart';
 import '../post_ad.dart';
-import '../read_review.dart';
 import '../search_pg.dart';
 import '../my_profile.dart';
 import 'chat_screen.dart';
@@ -25,10 +26,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   int _selectedIndex = 2;
-  File? _profileImage;
-  String? _downloadURL;
 
+  String? _userName;
+  String? _userEmail;
+  String? _profileImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  // Fetch current user's data from Firestore
+  void _fetchUserData() async {
+    User? user = _auth.currentUser;
+
+    if (user != null) {
+      String uid = user.uid;
+
+      // Fetch data from Firestore collection UsersBookStore
+      DocumentSnapshot userDoc = await _firestore.collection('UsersBookStore').doc(uid).get();
+
+      if (userDoc.exists) {
+        setState(() {
+          _userName = userDoc['name'];  // Assuming 'name' field exists in Firestore
+          _userEmail = userDoc['email'];  // Assuming 'email' field exists in Firestore
+          _profileImageUrl = userDoc['profileImage'];  // Assuming 'profileImage' field exists in Firestore
+        });
+      }
+    }
+  }
   final List<Widget> _pages = [
     SearchPage(),
     AskAI(),
@@ -97,29 +127,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: yellow
                 ),
-                accountName: Text('Clara Albert',
-                    style: TextStyle(color: Colors.black)),
-                accountEmail: Text('clara21@gmail.com',
-                    style: TextStyle(color: Colors.black)),
-                currentAccountPicture: Container(
-                  height: 80,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      image: DecorationImage(
-                          image: _profileImage != null
-                              ? FileImage(_profileImage!)
-                              : _downloadURL != null
-                              ? NetworkImage(_downloadURL!) as ImageProvider
-                              : AssetImage('assets/p.jpg'),
-                          fit: BoxFit.cover
-                      )
-                  ),
+                accountName: Text(
+                  _userName ?? 'Clara Albert',
+                  style: TextStyle(color: Colors.black),
+                ),
+                accountEmail: Text(
+                  _userEmail ?? 'clara21@gmail.com',
+                  style: TextStyle(color: Colors.black),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: _profileImageUrl != null
+                      ? NetworkImage(_profileImageUrl!)
+                      : AssetImage('assets/p.jpg') as ImageProvider,
+                  radius: 40,
                 ),
               ),
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
-              _buildDrawerItem(Icons.reviews, "Read Review", 2),
+              _buildDrawerItem(Icons.reviews, "Book Review", 2),
               _buildDrawerItem(Icons.info, "About Us", 3),
               _buildDrawerItem(Icons.settings, "Settings", 4),
               _buildDrawerItem(Icons.logout, "Logout", 5),
@@ -162,7 +187,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _navigateToPage(context, MyProfile());
             break;
           case 2:
-            _navigateToPage(context, ReadReview());
+            _navigateToPage(context, BookReview());
             break;
           case 3:
             _navigateToPage(context, AboutUs());

@@ -13,14 +13,14 @@ class Book {
     required this.rating,
   });
   // Factory constructor to create a Book from Firestore data
-  factory Book.fromFirestore(Map<String, dynamic> data) {
-    return Book(
-      title: data['title'] ?? 'Unknown Title',
-      author: data['author'] ?? 'Unknown Author',
-      price: (data['price'] as num).toDouble(),
-      imageUrl: data['imageUrl'] ?? 'default_image.png',
-      rating: (data['rating'] as num).toDouble(),
-    );
-  }
+  // factory Book.fromFirestore(Map<String, dynamic> data) {
+  //   return Book(
+  //     title: data['title'] ?? 'Unknown Title',
+  //     author: data['author'] ?? 'Unknown Author',
+  //     price: (data['price'] as num).toDouble(),
+  //     imageUrl: data['imageUrl'] ?? 'default_image.png',
+  //     rating: (data['rating'] as num).toDouble(),
+  //   );
+  // }
 }
 

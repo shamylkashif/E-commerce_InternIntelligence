@@ -1,6 +1,4 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'book.dart';
 import 'book_desp.dart';
@@ -41,32 +39,32 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
 
 
   // Fetch books data from firestore
-  Future<void> _fetchBookData() async {
-    try {
-      final User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        QuerySnapshot bookData = await FirebaseFirestore.instance
-            .collection('AllBooks')  // Your collection name for books
-            .where('ownerId', isEqualTo: user.uid)  // Assuming books are linked to the user
-            .get();
-
-        setState(() {
-          books = bookData.docs
-              .map((doc) => Book.fromFirestore(doc.data() as Map<String, dynamic>))
-              .toList();
-        });
-      }
-    } catch (e) {
-      print("Error fetching book data: $e");
-    }
-  }
+  // Future<void> _fetchBookData() async {
+  //   try {
+  //     final User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       QuerySnapshot bookData = await FirebaseFirestore.instance
+  //           .collection('AllBooks')  // Your collection name for books
+  //           .where('ownerId', isEqualTo: user.uid)  // Assuming books are linked to the user
+  //           .get();
+  //
+  //       setState(() {
+  //         books = bookData.docs
+  //             .map((doc) => Book.fromFirestore(doc.data() as Map<String, dynamic>))
+  //             .toList();
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching book data: $e");
+  //   }
+  // }
 
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _fetchBookData();
+    // _fetchBookData();
   }
 
   @override

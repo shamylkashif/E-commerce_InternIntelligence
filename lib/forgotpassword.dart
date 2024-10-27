@@ -20,7 +20,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             onTap: (){
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios,color: blue,)),
+            child: Icon(Icons.arrow_circle_left_outlined,)),
         title: Text('Forgot Password', ),
         centerTitle: true,
       ),
@@ -38,7 +38,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     borderRadius: BorderRadius.circular(28),
                   ),
                   labelText: 'abc@gmail.com',
-                  labelStyle: const TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey[300]),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(28)
@@ -116,7 +116,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
             ],),
             SizedBox(height: 70,),
-            Text('Don\'t have an Account'),
+            Text('Don\'t have an Account?'),
             SizedBox(height: 15,),
             InkWell(
               onTap: (){

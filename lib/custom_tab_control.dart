@@ -15,7 +15,6 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
   List<Map<String, dynamic>> Comedy=[];
   List<Map<String, dynamic>> Fiction=[];
   List<Map<String, dynamic>> Horror=[];
-  List<Map<String, dynamic>> displayedBooks = [];
 
   Future<void> fetchBooks() async {
     try {
@@ -29,7 +28,6 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
         Comedy = fetchedBooks.where((book) => book['category'] == 'Comedy').toList();
         Fiction = fetchedBooks.where((book) => book['category'] == 'Fiction').toList();
         Horror= fetchedBooks.where((book) => book['category'] == 'Horror').toList();
-        displayedBooks = fetchedBooks; // For search functionality
       });
     } catch (e) {
       print("Error fetching books: $e");
@@ -37,31 +35,6 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
   }
 
 
-  // Sample list of books
-  // late List< Book> books = [
-  //   Book(
-  //     title: 'Soul',
-  //     author: 'Olivia Wilson',
-  //     price : 300,
-  //     imageUrl: 'assets/slider/download.jpeg',
-  //     rating: 4.7,
-  //   ),
-  //   Book(
-  //     title: 'Mystery Book',
-  //     author: 'John Doe',
-  //     price : 300,
-  //     imageUrl: 'assets/slider/Harry.jpeg',
-  //     rating: 4.5,
-  //   ),
-  //   Book(
-  //     title: 'Memory',
-  //     author: 'Debbie Berny',
-  //     price : 300,
-  //     imageUrl: 'assets/slider/memory.jpeg',
-  //     rating: 4.1,
-  //   ),
-  //   // // Add more books as needed
-  // ];
 
   @override
   void initState() {

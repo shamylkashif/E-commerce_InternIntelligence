@@ -1,5 +1,6 @@
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -14,6 +15,10 @@ class _SearchPageState extends State<SearchPage> {
   late ScrollController scrollController1;
   late ScrollController scrollController2;
   late Timer timer;
+  String searchQuery = '';
+  List<Map<String, dynamic>> allBooks = [];
+  List<Map<String, dynamic>> displayedBooks = [];
+
 
   bool reverse1 = false;
   bool reverse2 = false;
@@ -25,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
     scrollController1 = ScrollController();
     scrollController2 = ScrollController();
 
+   //Timer of scrolling
     timer = Timer.periodic(const Duration(milliseconds: 90), (Timer t) {
       autoScroll(scrollController1, reverse1, (isReverse) {
         setState(() {
@@ -37,8 +43,38 @@ class _SearchPageState extends State<SearchPage> {
         });
       });
     });
+    fetchBooks();
   }
+  //Fetch book data
+ Future <void> fetchBooks() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
+      List<Map<String, dynamic>> fetchedBooks = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+      setState(() {
+        allBooks = fetchedBooks;
+        displayedBooks = allBooks;
+      });
+    } catch(e){
+      print('Error fetching books: $e');
+    }
+ }
 
+   //Search books
+  void searchBooks(String query) {
+    setState(() {
+      searchQuery = query;
+      if(query.isEmpty){
+        displayedBooks = allBooks;
+      } else {
+        displayedBooks = allBooks.where((book)=>
+        (book['title'] as String ).toLowerCase().contains(query.toLowerCase()) ||
+            (book['author'] as String ).toLowerCase().contains(query.toLowerCase())).toList();
+      }
+    });
+  }
+   //Scroll Direction
   void autoScroll(ScrollController controller, bool reverse, Function(bool) updateDirection) {
     double maxScrollExtent = controller.position.maxScrollExtent;
     double minScrollExtent = controller.position.minScrollExtent;
@@ -74,6 +110,9 @@ class _SearchPageState extends State<SearchPage> {
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
             child: TextField(
+              onChanged:  (query){
+                searchBooks(query);
+              },
               style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 labelText: 'Search book',
@@ -138,7 +177,7 @@ class _SearchPageState extends State<SearchPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
-                itemCount: books.length,
+                itemCount: displayedBooks.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,  // Number of columns
                   crossAxisSpacing: 10,
@@ -146,7 +185,7 @@ class _SearchPageState extends State<SearchPage> {
                   childAspectRatio: 0.65, // Adjust this ratio to control the size of the grid items
                 ),
                 itemBuilder: (context, index) {
-                  final book = books[index];
+                  final book = displayedBooks[index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
                     children: [
@@ -154,13 +193,13 @@ class _SearchPageState extends State<SearchPage> {
                         borderRadius: BorderRadius.circular(15),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book,)));
                           },
                           child: SizedBox(
                             height: 225,  // Fixed height for the image
                             width: double.infinity,  // Ensure the image takes full width
-                            child: Image.asset(
-                              book['imageUrl'] ?? 'assets/slider/Harry.jpeg',
+                            child: Image.network(
+                              book['imageUrl'] ?? '',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -190,15 +229,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-// Mock data for books
-final List<Map<String, String>> books = [
-  {'title': 'Soul', 'imageUrl': 'assets/slider/download.jpeg'},
-  {'title': 'Harry Potter', 'imageUrl': 'assets/slider/Harry.jpeg'},
-  {'title': 'Memory', 'imageUrl': 'assets/slider/memory.jpeg'},
-  {'title': 'The Design', 'imageUrl': 'assets/slider/The design.png'},
-  {'title': 'Harry Potter', 'imageUrl': 'assets/slider/Harry.jpeg'},
-  {'title': 'Soul', 'imageUrl': 'assets/slider/download.jpeg'},
-];
+
 
 class CategoryContainer extends StatelessWidget {
   final String label;

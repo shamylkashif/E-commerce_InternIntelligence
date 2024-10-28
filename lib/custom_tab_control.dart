@@ -88,11 +88,12 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
 
 Widget  BookData(List<Map<String, dynamic>> booksCategory){
   return ListView.builder(
+      scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+      physics: BouncingScrollPhysics(),
       itemCount: booksCategory.length,
       itemBuilder:(context, index){
         var book = booksCategory[index];
         return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
           child: Row(
             children: [
               Padding(
@@ -104,7 +105,7 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
                 borderRadius: BorderRadius.circular(20),
                      child: InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription()));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book:book)));
                   },
                        child: Image.network(
                     book['imageUrl'] ?? '',

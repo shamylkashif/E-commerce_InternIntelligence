@@ -4,13 +4,16 @@ import 'package:bookstore/screens/seller-info.dart';
 import 'package:flutter/material.dart';
 
 class BookDescription extends StatefulWidget {
-  const BookDescription({super.key});
+  final Map<String, dynamic> book; // Declare book variable
+
+  const BookDescription({Key? key, required this.book}) : super(key: key);
 
   @override
   State<BookDescription> createState() => _BookDescriptionState();
 }
 
 class _BookDescriptionState extends State<BookDescription> {
+
 
 
   @override
@@ -30,14 +33,19 @@ class _BookDescriptionState extends State<BookDescription> {
           Padding(padding: EdgeInsets.only(top: 20)),
             Align(
                 alignment: Alignment.center,
-                child: Image.asset('assets/slider/Harry.jpeg', height: 200,width: 210,)
+                child:
+                Image.network(widget.book['imageUrl']?? "",
+                  height: 200,
+                  width: 210,
+                  fit: BoxFit.cover,
+                )
             ),
           SizedBox(height: 20,),
-          Text('Harry Potter And The Cursed Child', style: TextStyle(
+          Text(widget.book['title']?? "Unknown title", style: TextStyle(
              fontSize: 16,
              color:blue,
           ),),
-          Text('Debie Berny', style: TextStyle(fontSize: 15, color: Colors.grey[400]),),
+          Text(widget.book['author']?? "Unknown author", style: TextStyle(fontSize: 15, color: Colors.grey[400]),),
           SizedBox(height: 15,),
           Stack(
             children: [
@@ -53,14 +61,14 @@ class _BookDescriptionState extends State<BookDescription> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 62),
-                        child: Text('Synopsis', style: TextStyle(fontSize: 20,color: Colors.black),),
+                        child: Text(
+                          'Synopsis',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8,left: 5,right: 5),
-                        child: Text('It follows Albus Severus Potter, the son of Harry Potter,'
-                            ' who is now Head of the Department of Magical Law Enforcement at the Ministry of Magic. '
-                            'When Albus arrives at Hogwarts, he gets sorted into Slytherin, '
-                            'and fails to live up to his father legacy, making him resentful of his father.',
+                        child: Text( widget.book['description']?? "Description not provided",
                         textAlign:TextAlign.center,
                         ),
                       ),
@@ -133,21 +141,21 @@ class _BookDescriptionState extends State<BookDescription> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('262', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
+                            Text(widget.book['pages']?? "", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
                             Text('Number of pages', style: TextStyle(fontSize: 12, color: Colors.grey),),
                           ],
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('Eng', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
+                            Text(widget.book['language']??"", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
                             Text('Language', style: TextStyle(fontSize: 12, color: Colors.grey),),
                           ],
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('Good', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
+                            Text(widget.book['condition']??"", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600]),),
                             Text('Condition', style: TextStyle(fontSize: 12, color: Colors.grey),),
                           ],
                         ),

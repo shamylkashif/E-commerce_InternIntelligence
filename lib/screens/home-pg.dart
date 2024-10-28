@@ -212,36 +212,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 }
 
-class HomePageContent extends StatelessWidget {
 
+
+
+
+
+class HomePageContent extends StatefulWidget {
+  const HomePageContent({super.key});
+
+  @override
+  State<HomePageContent> createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
   //PopularBooks List
-  final List<Map<String, dynamic>> pBook = [
-    {
-      'image': 'assets/slider/memory.jpeg',
-      'rating': 4.1,
-      'title': 'Memory',
-      'author': 'Debbie Berny',
-    },
-    {
-      'image': 'assets/slider/download.jpeg',
-      'rating': 4.5,
-      'title': 'Harry Potter',
-      'author': 'J.K. Rowling',
-    },
-    {
-      'image': 'assets/slider/Harry.jpeg',
-      'rating': 4.7,
-      'title': 'Soul',
-      'author': 'Olivia Wilson',
-    },
-    {
-      'image': 'assets/slider/The design.png',
-      'rating': 4.2,
-      'title': 'The Design',
-      'author': 'Debbie Berne',
-    },
-  ];
+  List<Map<String, dynamic>> pBook = [];
 
+  @override
+  void initState(){
+    super.initState();
+    _fetchPopularBooks();
+  }
+
+  //Fetch data from firestore
+  Future<void> _fetchPopularBooks() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
+      List<Map<String,dynamic>> books = [];
+      for(var doc in snapshot.docs) {
+        books.add({
+          'imageUrl' : doc['imageUrl'],
+          'title' : doc['title'],
+          'author' : doc['author'],
+        });
+      }
+      setState(() {
+        pBook = books;
+      });
+    } catch (e) {
+      print('Error Fetching Book\'s data:$e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,8 +305,6 @@ class HomePageContent extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: pBook.map((pBookItem) {
-                          final imagePath =
-                              pBookItem['image'] ?? 'assets/slider/default_image.jpeg';
                           return Container(
                             height: 100,
                             width: 220,
@@ -311,8 +320,8 @@ class HomePageContent extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 8),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.asset(
-                                      imagePath,
+                                    child: Image.network(
+                                      pBookItem['imageUrl']??"",
                                       height: 90,
                                       width: 60,
                                       fit: BoxFit.cover,
@@ -326,14 +335,14 @@ class HomePageContent extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        pBookItem['title'],
+                                        pBookItem['title']??"",
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
-                                        pBookItem['author'],
+                                        pBookItem['author']??"",
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 12,
@@ -353,7 +362,7 @@ class HomePageContent extends StatelessWidget {
                                                 color: blue, size: 17),
                                             SizedBox(width: 4),
                                             Text(
-                                              pBookItem['rating'].toString(),
+                                              pBookItem['rating'].toString()??"",
                                               style: TextStyle(
                                                 color: blue,
                                                 fontSize: 15,
@@ -369,7 +378,7 @@ class HomePageContent extends StatelessWidget {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      BookDescription()));
+                                                      BookDescription(book: pBookItem,)));
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(
@@ -409,8 +418,6 @@ class HomePageContent extends StatelessWidget {
       ),
     );
   }
-
-
   Widget _buildImage(String imagePath) {
     return ClipRRect(
       child: Image.asset(
@@ -422,4 +429,5 @@ class HomePageContent extends StatelessWidget {
     );
   }
 }
+
 

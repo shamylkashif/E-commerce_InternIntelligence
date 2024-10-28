@@ -20,7 +20,7 @@ class _NotificationsState extends State<Notifications> {
             onTap: (){
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios, color: blue,)),
+            child: Icon(Icons.arrow_circle_left_outlined, color: blue,)),
       ),
       body: Column(
         children: [

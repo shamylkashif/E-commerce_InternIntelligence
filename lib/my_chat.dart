@@ -22,7 +22,7 @@ class _MyChatState extends State<MyChat> {
             onTap: (){
              Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+            child: Icon(Icons.arrow_circle_left_outlined,color: Colors.white,)),
         title: ListTile(
           leading: CircleAvatar(
             radius: 20,

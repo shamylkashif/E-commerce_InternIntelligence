@@ -38,7 +38,7 @@ class _MySettingsState extends State<MySettings> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40,right: 260),
-                    child: Icon(Icons.arrow_back_ios, color: Colors.white,),
+                    child: Icon(Icons.arrow_circle_left_outlined, color: Colors.white,),
                   )),
               SizedBox(height: 25,),
                Container(

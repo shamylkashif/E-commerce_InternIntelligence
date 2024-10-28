@@ -22,7 +22,7 @@ class _BookReviewState extends State<BookReview> {
             onTap: (){
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios_new_outlined, color: blue,)),
+            child: Icon(Icons.arrow_circle_left_outlined, color: blue,)),
       ),
       body: Column(
         children: [

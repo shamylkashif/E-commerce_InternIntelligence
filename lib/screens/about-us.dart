@@ -26,7 +26,7 @@ class _AboutUsState extends State<AboutUs> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 80, left: 15),
-                  child: Icon(Icons.arrow_back_ios, color: blue),
+                  child: Icon(Icons.arrow_circle_left_outlined, color: blue),
                 ),
               ),
               Padding(

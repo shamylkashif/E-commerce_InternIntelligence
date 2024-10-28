@@ -17,7 +17,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
             onTap: (){
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios, color: blue,)),
+            child: Icon(Icons.arrow_circle_left_outlined, color: blue,)),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

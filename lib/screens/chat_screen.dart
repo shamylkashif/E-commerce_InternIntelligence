@@ -37,7 +37,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                  icon: Icon(Icons.arrow_circle_left_outlined, color: Colors.white),
                 ),
                 Expanded(
                   child: SizedBox(

@@ -47,7 +47,7 @@ class _ReadReviewState extends State<ReadReview> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_circle_left_outlined,
             color: blue,
           ),
         ),

@@ -104,11 +104,11 @@ class _PostADState extends State<PostAD> {
     }
   }
   // Generate a unique BookID
-  String _generateBookId() {
-    final random = Random();
-    final int randomNumber = random.nextInt(10000); // Random number between 0 and 9999
-    return 'Book-$randomNumber';
-  }
+  // String _generateBookId() {
+  //   final random = Random();
+  //   final int randomNumber = random.nextInt(10000); // Random number between 0 and 9999
+  //   return 'Book-$randomNumber';
+  // }
 
   // Fetch current location when checkbox is checked
   // Get the user's current location
@@ -277,12 +277,12 @@ class _PostADState extends State<PostAD> {
           children: [
            Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
+              child: SingleChildScrollView(
+                child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Category Section
-              RichText(
+                   RichText(
                   text: TextSpan(
                     text: 'Select Category',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: blue),
@@ -294,16 +294,16 @@ class _PostADState extends State<PostAD> {
                     ]
                   ),
                   ),
-              SizedBox(height: 8),
-              Container(
+                   SizedBox(height: 8),
+                   Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey)
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    hint: Text(
+                     child: DropdownButtonHideUnderline(
+                       child: DropdownButton<String>(
+                         hint: Text(
                       'Select Category',
                       style: TextStyle(color: Colors.grey),
                     ),
@@ -320,33 +320,33 @@ class _PostADState extends State<PostAD> {
                     onChanged: (newValue) { setState(() {
                       selectedCategory = newValue;
                     });},
-                    icon: Icon(Icons.arrow_drop_down, color: blue),
+                         icon: Icon(Icons.arrow_drop_down, color: blue),
                       style: TextStyle(color: blue, fontSize: 16),
                       dropdownColor: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              SizedBox(height: 16,),
+                    SizedBox(height: 16,),
 
               // Image Upload Section
-              Container(
+                    Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Column(
+                     child: Column(
                   children: [
-                    Row(
+                        Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Icon(Icons.book, color: blue, size: 50),
                         Icon(Icons.camera_alt, color: blue, size: 50),
                       ],
                     ),
-                    SizedBox(height: 8),
-                    OutlinedButton(
+                        SizedBox(height: 8),
+                         OutlinedButton(
                       style: OutlinedButton.styleFrom(side: BorderSide(color: blue)),
                       onPressed: () {
                          AwesomeDialog(
@@ -371,10 +371,10 @@ class _PostADState extends State<PostAD> {
                            },
                          ).show();
                       },
-                      child: Text("Add images", style: TextStyle(color: blue),),
+                            child: Text("Add images", style: TextStyle(color: blue),),
                     ),
-                    SizedBox(height: 8),
-                    Text(
+                        SizedBox(height: 8),
+                        Text(
                       "5MB maximum file size accepted in the following formats: .jpg, .jpeg, .png, .gif",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -382,10 +382,10 @@ class _PostADState extends State<PostAD> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
               // Book Title
-              RichText(
+                    RichText(
                 text: TextSpan(
                     text: 'Book Title',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -397,7 +397,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              TextFormField(
+                   TextFormField(
                 controller: titleController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -415,10 +415,10 @@ class _PostADState extends State<PostAD> {
                 maxLines: 1,
                 inputFormatters: [LengthLimitingTextInputFormatter(20)],
               ),
-              SizedBox(height: 16),
+                    SizedBox(height: 16),
 
               // Author
-              RichText(
+                    RichText(
                 text: TextSpan(
                     text: 'Author',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -430,7 +430,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              TextFormField(
+                    TextFormField(
                 controller: authorController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -448,10 +448,10 @@ class _PostADState extends State<PostAD> {
                 maxLines: 1,
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
               // Price
-              RichText(
+                   RichText(
                 text: TextSpan(
                     text: 'Price',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -463,7 +463,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              TextFormField(
+                   TextFormField(
                 controller: priceController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -482,10 +482,10 @@ class _PostADState extends State<PostAD> {
                 maxLines: 1,
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
               // Number of Pages
-              RichText(
+                   RichText(
                 text: TextSpan(
                     text: 'Number of Pages',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -497,7 +497,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              TextFormField(
+                   TextFormField(
                 controller: pagesController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -516,10 +516,10 @@ class _PostADState extends State<PostAD> {
                 maxLines: 1,
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
               // Language
-              RichText(
+                   RichText(
                 text: TextSpan(
                     text: 'Language',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -531,7 +531,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              TextFormField(
+                   TextFormField(
                 controller: languageController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -549,11 +549,11 @@ class _PostADState extends State<PostAD> {
                 maxLines: 1,
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
 
               //Book Description
-              RichText(
+                   RichText(
                 text: TextSpan(
                     text: 'Book Description',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -565,13 +565,13 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              Container(
+                    Container(
                 height: 100,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                child: TextFormField(
+                      child: TextFormField(
                   controller: descriptionController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -590,11 +590,11 @@ class _PostADState extends State<PostAD> {
                   textAlignVertical: TextAlignVertical.top,
                 ),
               ),
-              SizedBox(height: 16),
+                   SizedBox(height: 16),
 
 
               // Condition
-              RichText(
+                   RichText(
                 text: TextSpan(
                     text: 'Condition',
                     style: TextStyle(fontSize: 14,color: blue),
@@ -606,7 +606,7 @@ class _PostADState extends State<PostAD> {
                     ]
                 ),
               ),
-              Wrap(
+                   Wrap(
                 spacing: 8,
                 children: conditions.map((String condition){
                     return ChoiceChip(
@@ -623,11 +623,11 @@ class _PostADState extends State<PostAD> {
                   }).toList(),
               ),
 
-              SizedBox(height: 10),
+                   SizedBox(height: 10),
 
               //Checkbox Location
-              CheckboxListTile(
-                title: const Text('Use my current Location', style: TextStyle(color: blue)),
+                   CheckboxListTile(
+                     title: const Text('Use my current Location', style: TextStyle(color: blue)),
                 value: isChecked,
                 onChanged: (newValue) async {
                   setState(() {
@@ -644,14 +644,14 @@ class _PostADState extends State<PostAD> {
               ),
 
               // Save Button
-              SizedBox(
+                   SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                     child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: yellow),
                   onPressed: () {
                     _saveData();
                   },
-                  child: Text("Save", style: TextStyle(color: blue),),
+                       child: Text("Save", style: TextStyle(color: blue),),
                 ),
               ),
             ],

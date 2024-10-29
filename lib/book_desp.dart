@@ -31,15 +31,15 @@ class _BookDescriptionState extends State<BookDescription> {
       body: Column(
         children: [
           Padding(padding: EdgeInsets.only(top: 20)),
-            Align(
-                alignment: Alignment.center,
-                child:
-                Image.network(widget.book['imageUrl']?? "",
-                  height: 200,
-                  width: 210,
-                  fit: BoxFit.cover,
-                )
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              widget.book['imageUrl'] ?? '',
+              height: 200,
+              width: 150,
+              fit: BoxFit.cover,
             ),
+          ),
           SizedBox(height: 20,),
           Text(widget.book['title']?? "Unknown title", style: TextStyle(
              fontSize: 16,
@@ -107,7 +107,7 @@ class _BookDescriptionState extends State<BookDescription> {
                                   )
                               ) ,
                               onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>BookReview()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>BookReview( )));
                               },
                               child: Text('Write Review')
                           )

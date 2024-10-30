@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:math';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:bookstore/screens/home-pg.dart';
 import 'package:bookstore/search_pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -159,7 +160,7 @@ class _PostADState extends State<PostAD> {
 
 
   //List of Categories
-  List<String> categories = ['All Genre' , 'Comedy' , 'Fiction' , 'Horror'];
+  List<String> categories = ['Mystery' , 'Self-help' , 'Fiction' , 'Horror'];
 
   //List of Conditions
   List<String> conditions = ['New', 'Like New', 'Used-Good', 'Used-Acceptable'];
@@ -259,7 +260,7 @@ class _PostADState extends State<PostAD> {
     try {
       await FirebaseFirestore.instance.collection('AllBooks').add(bookData);
       SnackbarHelper.show(context, 'Book data saved successfully', backgroundColor: Colors.green);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
     } catch (e) {
       SnackbarHelper.show(context, 'Failed to save book: $e', backgroundColor: Colors.red);
     } finally {
@@ -399,6 +400,7 @@ class _PostADState extends State<PostAD> {
               ),
                    TextFormField(
                 controller: titleController,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter book title",
@@ -413,7 +415,7 @@ class _PostADState extends State<PostAD> {
                   )
                 ),
                 maxLines: 1,
-                inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                inputFormatters: [LengthLimitingTextInputFormatter(30)],
               ),
                     SizedBox(height: 16),
 
@@ -432,6 +434,7 @@ class _PostADState extends State<PostAD> {
               ),
                     TextFormField(
                 controller: authorController,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter author's name",
@@ -533,6 +536,7 @@ class _PostADState extends State<PostAD> {
               ),
                    TextFormField(
                 controller: languageController,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter language",
@@ -547,7 +551,7 @@ class _PostADState extends State<PostAD> {
                     )
                 ),
                 maxLines: 1,
-                inputFormatters: [LengthLimitingTextInputFormatter(30)],
+                inputFormatters: [LengthLimitingTextInputFormatter(20)],
               ),
                    SizedBox(height: 16),
 
@@ -572,6 +576,7 @@ class _PostADState extends State<PostAD> {
                   color: Colors.white,
                 ),
                       child: TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: descriptionController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),

@@ -5,13 +5,16 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../commons/colors.dart';
 
 class BookReview extends StatefulWidget {
-  const BookReview({super.key});
+  final Map<String, dynamic> book; // Declare book variable
+  const BookReview({super.key, required this.book});
 
   @override
   State<BookReview> createState() => _BookReviewState();
 }
 
 class _BookReviewState extends State<BookReview> {
+  TextEditingController _reviewController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,20 +48,19 @@ class _BookReviewState extends State<BookReview> {
                 children: [
                   Padding(padding: EdgeInsets.only(top: 20)),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      'assets/slider/Harry.jpeg',
+                    child: Image.network(
+                      widget.book['imageUrl']??"",
                       height: 200,
                       width: 150,
                       fit: BoxFit.contain,
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Text('Harry Potter And The Cursed Child', style: TextStyle(
+                  Text(widget.book['title'], style: TextStyle(
                     fontSize: 16,
                     color:blue,
                   ),),
-                  Text('Debie Berny', style: TextStyle(fontSize: 15, color: Colors.grey[400]),),
+                  Text(widget.book['author'], style: TextStyle(fontSize: 15, color: Colors.grey[400]),),
                 ],
               ),
             ),
@@ -117,6 +119,7 @@ class _BookReviewState extends State<BookReview> {
                         color: Colors.white,
                       ),
                       child: TextFormField(
+                        controller: _reviewController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: "Write Book Review",

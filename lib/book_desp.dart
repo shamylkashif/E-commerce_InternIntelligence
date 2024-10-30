@@ -32,12 +32,11 @@ class _BookDescriptionState extends State<BookDescription> {
         children: [
           Padding(padding: EdgeInsets.only(top: 20)),
           ClipRRect(
-            borderRadius: BorderRadius.circular(20),
             child: Image.network(
               widget.book['imageUrl'] ?? '',
               height: 200,
               width: 150,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
           SizedBox(height: 20,),
@@ -107,7 +106,7 @@ class _BookDescriptionState extends State<BookDescription> {
                                   )
                               ) ,
                               onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>BookReview( )));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>BookReview(book: widget.book)));
                               },
                               child: Text('Write Review')
                           )

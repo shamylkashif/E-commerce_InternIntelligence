@@ -1,4 +1,5 @@
 import 'package:bookstore/commons/colors.dart';
+import 'package:bookstore/screens/home-pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'book_desp.dart';
@@ -11,8 +12,8 @@ class CustomTabBar extends StatefulWidget {
 class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMixin {
   late TabController _tabController;
   List<Map<String, dynamic>> books=[];
-  List<Map<String, dynamic>> AllGenre=[];
-  List<Map<String, dynamic>> Comedy=[];
+  List<Map<String, dynamic>> Mystery=[];
+  List<Map<String, dynamic>> SelfHelp=[];
   List<Map<String, dynamic>> Fiction=[];
   List<Map<String, dynamic>> Horror=[];
 
@@ -24,8 +25,8 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
           .toList();
 
       setState(() {
-        AllGenre = fetchedBooks.where((book) => book['category'] == 'All Genre').toList();
-        Comedy = fetchedBooks.where((book) => book['category'] == 'Comedy').toList();
+        Mystery = fetchedBooks.where((book) => book['category'] == 'Mystery').toList();
+        SelfHelp= fetchedBooks.where((book) => book['category'] == 'Self-help').toList();
         Fiction = fetchedBooks.where((book) => book['category'] == 'Fiction').toList();
         Horror= fetchedBooks.where((book) => book['category'] == 'Horror').toList();
       });
@@ -34,6 +35,12 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
     }
   }
 
+  //To limit words
+  String limitWords(String text, int wordLimit) {
+    List<String> words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return words.take(wordLimit).join(' ') + '...';
+  }
 
 
   @override
@@ -61,8 +68,8 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
           labelColor: Colors.yellow[600], // Color of the selected tab text
           unselectedLabelColor: blue, // Color of the unselected tab text
           tabs: [
-            Tab(text: 'All Genre'),
-            Tab(text: 'Comedy'),
+            Tab(text: 'Mystery'),
+            Tab(text: 'Self-help'),
             Tab(text: 'Fiction'),
             Tab(text: 'Horror'),
           ],
@@ -73,8 +80,8 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
             controller: _tabController,
             physics: BouncingScrollPhysics(),
             children: [
-              BookData(AllGenre),
-              BookData(Comedy),
+              BookData(Mystery),
+              BookData(SelfHelp),
               BookData(Fiction),
               BookData(Horror),
             ],
@@ -102,16 +109,15 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                    ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
                      child: InkWell(
                   onTap: () {
                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book:book)));
-                  },
-                       child: Image.network(
+                  }, child: Image.network(
                     book['imageUrl'] ?? '',
-                    height: 200,
+                    height: 210,
                     width: 150,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -119,8 +125,8 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
                     Padding(
                 padding: const EdgeInsets.only(left: 5),
                      child: Text(
-                  book['title'] ?? "Unknown Title",
-                  style: TextStyle(
+                       limitWords( book['title'] ?? "Unknown Title", 3),
+                       style: TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                   ),
@@ -130,7 +136,7 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
                    Padding(
                 padding: const EdgeInsets.only(left: 5),
                      child: Text(
-                  book["author"] ?? "Unknown Author",
+                       limitWords( book['author'] ?? "Unknown Title", 3),
                   style: TextStyle(color: Colors.grey[350], fontSize: 14,
                   ),
                 ),
@@ -161,6 +167,5 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
         );
 
       }
-
-  );
+      );
 }

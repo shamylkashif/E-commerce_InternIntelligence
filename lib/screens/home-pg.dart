@@ -211,8 +211,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
 }
-
-
+//To limit words
+String limitWords(String text, int wordLimit) {
+  List<String> words = text.split(' ');
+  if (words.length <= wordLimit) return text;
+  return words.take(wordLimit).join(' ') + '...';
+}
 
 
 
@@ -329,20 +333,21 @@ class _HomePageContentState extends State<HomePageContent> {
                                   ),
                                 ),
                                 SizedBox(width: 8),
+
                                 Padding(
                                   padding: const EdgeInsets.only(left: 17, top: 8),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        pBookItem['title']??"",
+                                        limitWords(pBookItem['title']??"", 3),
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
-                                        pBookItem['author']??"",
+                                        limitWords(pBookItem['author']??"", 3),
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 12,

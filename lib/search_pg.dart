@@ -114,6 +114,7 @@ class _SearchPageState extends State<SearchPage> {
                 searchBooks(query);
               },
               style: const TextStyle(color: Colors.black),
+              textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 labelText: 'Search book',
                 labelStyle: const TextStyle(color: Color(0xFF0A4DA2)),
@@ -190,7 +191,7 @@ class _SearchPageState extends State<SearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(10),
                         child: InkWell(
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book,)));
@@ -200,7 +201,7 @@ class _SearchPageState extends State<SearchPage> {
                             width: double.infinity,  // Ensure the image takes full width
                             child: Image.network(
                               book['imageUrl'] ?? '',
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),

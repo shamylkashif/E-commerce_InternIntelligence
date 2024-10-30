@@ -1,4 +1,7 @@
+
 import 'package:bookstore/read_review.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -14,6 +17,63 @@ class BookReview extends StatefulWidget {
 
 class _BookReviewState extends State<BookReview> {
   TextEditingController _reviewController = TextEditingController();
+  double _userRating = 0.0;
+  String _userName = "";
+
+
+  void initState(){
+    super.initState();
+    _getUserName();
+  }
+
+
+  //Method to save userName
+  Future<void> _getUserName() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if(userId !=null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('UsersBookStore')
+          .doc(userId)
+          .get();
+      if(userDoc.exists){
+        setState(() {
+          _userName = userDoc['name']?? "Anonymous";
+        });
+      }
+    }
+  }
+
+
+
+  //Method to save the rating and review to firestore
+  Future<void> _saveReview() async{
+    final bookId = widget.book['bookID'];
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if(bookId != null && userId != null) {
+      await FirebaseFirestore.instance
+          .collection('AllBooks')
+          .doc(bookId)
+          .collection('ratings')
+          .doc(userId)
+          .set({
+         'rating' : _userRating,
+         'review' :_reviewController.text,
+         'reviewerName': _userName,
+         'bookImage' : widget.book['imageUrl'],
+         'bookName' : widget.book['title'],
+         'authorName' : widget.book['author']
+         // 'timestamp' : FieldValue.serverTimestamp(),
+      });
+
+      //Display success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        
+        SnackBar(content: Text('Review saved successfully!',style: TextStyle(color: Colors.green),))
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReadReview()));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +158,11 @@ class _BookReviewState extends State<BookReview> {
                                     itemSize: 40,
                                     updateOnDrag: true,
                                     itemBuilder: (context, _)=> Icon(Icons.star, color: Colors.amber,),
-                                    onRatingUpdate: (rating){}
+                                    onRatingUpdate: (rating){
+                                      setState(() {
+                                        _userRating = rating;
+                                      });
+                                    }
                                 ),
                               )
                           ),
@@ -119,6 +183,7 @@ class _BookReviewState extends State<BookReview> {
                         color: Colors.white,
                       ),
                       child: TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         controller: _reviewController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -139,9 +204,7 @@ class _BookReviewState extends State<BookReview> {
                     ),
                      SizedBox(height: 15,),
                      GestureDetector(
-                       onTap: (){
-                         Navigator.push(context, MaterialPageRoute(builder: (context)=>ReadReview()));
-                       },
+                       onTap: _saveReview,
                        child: Container(
                          height: 50,
                          width: 350,

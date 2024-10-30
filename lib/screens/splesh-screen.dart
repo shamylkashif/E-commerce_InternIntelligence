@@ -43,7 +43,7 @@ class _SpleshScreenState extends State<SpleshScreen> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/The BookStore (1).png',
+            'assets/splash_background.png',
             height: double.infinity,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -51,7 +51,7 @@ class _SpleshScreenState extends State<SpleshScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 55, top: 120),
             child: Image.asset(
-              'assets/LogoWot.png',
+              'assets/Logo.png',
               height: 250,
               width: 250,
             ),

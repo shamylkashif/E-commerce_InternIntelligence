@@ -62,7 +62,7 @@ class _ReadReviewState extends State<ReadReview> {
             criticName: review["criticName"]?? "Unknown Critic",
             rating: review["rating"] ?? "0",
             reviewText: review["review"]?? "No review available",
-            bookImage: review["image"]?? "assets/slider/memory.jpeg",
+            bookImage: review["image"]?? "",
           );
         },
       ),
@@ -116,7 +116,7 @@ class ReviewCard extends StatelessWidget {
                     bookImage,
                     height: 90,
                     width: 70,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 SizedBox(width: 12),
@@ -132,7 +132,7 @@ class ReviewCard extends StatelessWidget {
                       style: TextStyle(fontSize: 17),
                     ),
                     Text(
-                      criticName,
+                      "Reviewer Name $criticName",
                       style: TextStyle(fontSize: 17),
                     ),
                     Row(

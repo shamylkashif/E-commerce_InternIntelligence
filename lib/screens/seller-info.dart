@@ -65,7 +65,7 @@ class _SellerInformationState extends State<SellerInformation> {
                   height: 130,
                   width: 350, // Set the desired width here
                   child: Image.asset(
-                    'assets/images.jpeg',
+                    'assets/map.jpeg',
                     fit: BoxFit.cover, // Adjust fit as needed
                   ),
                 ),

@@ -367,7 +367,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                                 color: blue, size: 17),
                                             SizedBox(width: 4),
                                             Text(
-                                              pBookItem['rating'].toString()??"",
+                                              pBookItem['rating'].toString()??"0.0",
                                               style: TextStyle(
                                                 color: blue,
                                                 fontSize: 15,

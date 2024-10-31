@@ -47,12 +47,21 @@ class _BookReviewState extends State<BookReview> {
 
   //Method to save the rating and review to firestore
   Future<void> _saveReview() async{
+
+    //Check if rating and text field are empty
+    if(_userRating == 0.0 && _reviewController.text.trim().isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please provide rating or review to submit', style: TextStyle(color: Colors.red),
+        ),
+        ),
+      );
+      return;
+    }
+
     final bookId = widget.book['bookID'];
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if(bookId != null && userId != null) {
       await FirebaseFirestore.instance
-          .collection('AllBooks')
-          .doc(bookId)
           .collection('ratings')
           .doc(userId)
           .set({

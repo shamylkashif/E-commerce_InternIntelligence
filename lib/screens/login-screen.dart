@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final BookStoreUserRepository _usersRepository = BookStoreUserRepository();
   final FirestoreController _users = FirestoreController();
   bool _isPasswordVisible = false;// For show/hide password
+  bool isLoading = false;
 
   // Function to toggle password visibility
   void _togglePasswordVisibility() {
@@ -51,6 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signIn(BuildContext context) {
+    setState(() {
+      isLoading = true;
+    });
     if (_formKey.currentState?.validate() ?? false) {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -213,8 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 415, left: 116),
               child: InkWell(
-                onTap: () {
-                  _signIn(context); // Trigger form validation and sign-in
+                onTap:  isLoading ? null: (){
+                _signIn(context); // Trigger form validation and sign-in
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 5),
@@ -229,7 +233,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  child:  const Text(
+                  child:  isLoading ? CircularProgressIndicator(color: Colors.grey,) :
+                  const Text(
                     "Login",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,

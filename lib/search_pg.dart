@@ -23,6 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   bool reverse1 = false;
   bool reverse2 = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -174,7 +175,9 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           // Books Section
-          Expanded(
+          allBooks.isEmpty
+              ? Center(child: CircularProgressIndicator(color: Colors.grey,),)
+         :  Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
@@ -194,7 +197,7 @@ class _SearchPageState extends State<SearchPage> {
                         borderRadius: BorderRadius.circular(10),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book, bookID: '',)));
                           },
                           child: SizedBox(
                             height: 225,  // Fixed height for the image

@@ -18,7 +18,8 @@ import 'loaders.dart';
 
 
 class PostAD extends StatefulWidget {
-  const PostAD({super.key});
+  final Map<String, dynamic>? existingBookData;
+  const PostAD({super.key, this.existingBookData});
 
   @override
   State<PostAD> createState() => _PostADState();
@@ -32,13 +33,32 @@ class _PostADState extends State<PostAD> {
   String? imagePath;
   String? bookId;
   String? currentUID;
-  bool isLoading = false; // To track loading state
+  bool isLoading = false;// To track loading state
+  bool isEditing = false;
 
   final ImagePicker _picker = ImagePicker();
   @override
+
+
   void initState() {
     super.initState();
     _getCurrentUserUID();
+    if(widget.existingBookData != null){
+      isEditing = true;
+      _populateFields();
+    }
+  }
+
+  void _populateFields() {
+    titleController.text = widget.existingBookData!['title']??"";
+    authorController.text = widget.existingBookData!['author']??"";
+    priceController.text = widget.existingBookData!['price']??"";
+    pagesController.text = widget.existingBookData!['pages']??"";
+    languageController.text = widget.existingBookData!['language']??"";
+    descriptionController.text = widget.existingBookData!['description']??"";
+    selectedCategory = widget.existingBookData!['category'];
+    selectedCondition = widget.existingBookData!['condition']??"";
+    isChecked = widget.existingBookData!['useLocation']?? false;
   }
 
   // Function to get the current user UID
@@ -102,7 +122,7 @@ class _PostADState extends State<PostAD> {
       ).show();
     }
   }
-  // Generate a unique BookID
+  // Generate a unique BookID;
   // String _generateBookId() {
   //   final random = Random();
   //   final int randomNumber = random.nextInt(10000); // Random number between 0 and 9999
@@ -256,6 +276,9 @@ class _PostADState extends State<PostAD> {
     };
 
     try {
+      if(isEditing){
+        await FirebaseFirestore.instance.collection('AllBooks').doc(widget.existingBookData!['docID']).update(bookData);
+      }else
       await FirebaseFirestore.instance.collection('AllBooks').add(bookData);
       SnackbarHelper.show(context, 'Book data saved successfully', backgroundColor: Colors.green);
       Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));

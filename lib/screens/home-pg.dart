@@ -2,6 +2,7 @@
 import 'package:bookstore/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/custom_tab_control.dart';
+import 'package:bookstore/my_posts.dart';
 import 'package:bookstore/read_review.dart';
 import 'package:bookstore/screens/about-us.dart';
 import 'package:bookstore/setting.dart';
@@ -138,16 +139,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: _profileImageUrl != null
                       ? NetworkImage(_profileImageUrl!)
-                      : AssetImage('assets/p.jpg') as ImageProvider,
+                      : AssetImage('assets/defaultImage.jpg') as ImageProvider,
                   radius: 40,
                 ),
               ),
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
               _buildDrawerItem(Icons.reviews, "Read Review", 2),
-              _buildDrawerItem(Icons.info, "About Us", 3),
-              _buildDrawerItem(Icons.settings, "Settings", 4),
-              _buildDrawerItem(Icons.logout, "Logout", 5),
+              _buildDrawerItem(Icons.article, "My Ads", 3),
+              _buildDrawerItem(Icons.info, "About Us", 4),
+              _buildDrawerItem(Icons.settings, "Settings", 5),
+              _buildDrawerItem(Icons.logout, "Logout", 6),
             ],
           ),
         ),
@@ -190,12 +192,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _navigateToPage(context, ReadReview());
             break;
           case 3:
-            _navigateToPage(context, AboutUs());
+            _navigateToPage(context, MyPostsPage());
             break;
           case 4:
-            _navigateToPage(context, MySettings());
+            _navigateToPage(context, AboutUs());
             break;
           case 5:
+            _navigateToPage(context, MySettings());
+            break;
+          case 6:
             onLogout(context);  // Call your logout function
             break;
         }
@@ -260,8 +265,8 @@ class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
+      body:  SingleChildScrollView(
+           child: Container(
           height: 720, // Set your desired height here
           child: Stack(
             children: [
@@ -291,7 +296,12 @@ class _HomePageContentState extends State<HomePageContent> {
                 padding: const EdgeInsets.only(top: 190),
                 child: CustomTabBar(),
               ),
-              // PopularBooks
+              //PopularBooks
+              pBook.isEmpty
+                  ? Center(
+                      child: CircularProgressIndicator(color: Colors.grey,), // Display loader here
+              )
+                  :
               Padding(
                 padding: const EdgeInsets.only(top: 565, left: 5, right: 5),
                 child: Column(
@@ -383,7 +393,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      BookDescription(book: pBookItem,)));
+                                                      BookDescription(book: pBookItem, bookID: '',)));
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(

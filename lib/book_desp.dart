@@ -4,9 +4,9 @@ import 'package:bookstore/screens/seller-info.dart';
 import 'package:flutter/material.dart';
 
 class BookDescription extends StatefulWidget {
-  final Map<String, dynamic> book; // Declare book variable
-
-  const BookDescription({Key? key, required this.book}) : super(key: key);
+  final Map<String, dynamic> book;// Declare book variable
+  final String bookID;
+  const BookDescription({Key? key, required this.book, required this.bookID}) : super(key: key);
 
   @override
   State<BookDescription> createState() => _BookDescriptionState();
@@ -90,7 +90,7 @@ class _BookDescriptionState extends State<BookDescription> {
                                     showDragHandle: true,
                                     isDismissible: true,
                                     builder: (context){
-                                      return SellerInformation();
+                                      return SellerInformation(bookID: widget.bookID);
                                     }
                                 );
                               },

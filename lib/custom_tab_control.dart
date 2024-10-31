@@ -112,7 +112,7 @@ Widget  BookData(List<Map<String, dynamic>> booksCategory){
                 borderRadius: BorderRadius.circular(15),
                      child: InkWell(
                   onTap: () {
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book:book)));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book:book, bookID: '',)));
                   }, child: Image.network(
                     book['imageUrl'] ?? '',
                     height: 210,

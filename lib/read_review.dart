@@ -1,4 +1,6 @@
+
 import 'package:bookstore/commons/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ReadReview extends StatefulWidget {
@@ -10,31 +12,43 @@ class ReadReview extends StatefulWidget {
 
 class _ReadReviewState extends State<ReadReview> {
   // Sample reviews data
-  final List<Map<String, String>> reviews = [
-    {
-      "bookName": "Book One",
-      "authorName": "Author One",
-      "criticName": "Critic One",
-      "rating": "4",
-      "review": "This is a fantastic book that provides in-depth knowledge on various topics. "
-          "The author does a great job of explaining complex concepts in a simple manner. "
-          "I highly recommend it to anyone looking to expand their understanding. "
-          "The examples used are very relatable, and the writing style is engaging. "
-          "Overall, a must-read for enthusiasts!",
-      "image": "assets/slider/Harry.jpeg",
-    },
-    {
-      "bookName": "Book Two",
-      "authorName": "Author Two",
-      "criticName": "Critic Two",
-      "rating": "5",
-      "review": "An incredible journey through the author's mind. The storytelling is gripping and emotional. "
-          "A book that will stay with you long after you've finished reading.",
-      "image": "assets/slider/memory.jpeg",
+  List<Map<String, dynamic>> reviews = [];
 
-    },
-    // Add more reviews as needed
-  ];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReview(); // Fetch reviews from Firestore
+  }
+
+
+
+  //Fetch data from firestore
+  Future<void> _fetchReview() async {
+    try{
+      QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance.collection('ratings').get();
+
+
+      //Map the review documents to list
+      setState(() {
+        reviews = reviewSnapshot.docs.map((doc){
+          return{
+            'bookName' : doc['bookName'],
+            'authorName' : doc['authorName'],
+            'reviewerName' : doc['reviewerName'],
+            'rating' : doc['rating'].toString(),
+            'review' : doc['review'],
+            'bookImage' : doc['bookImage'],
+          };
+        }).toList();
+      });
+
+
+    }catch(e){
+      print('Error fetching reviews: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +73,10 @@ class _ReadReviewState extends State<ReadReview> {
           return ReviewCard(
             bookName: review["bookName"]?? "Unknown Book",
             authorName: review["authorName"]?? "Unknown Author",
-            criticName: review["criticName"]?? "Unknown Critic",
+            reviewerName: review["reviewerName"]?? "Unknown Critic",
             rating: review["rating"] ?? "0",
             reviewText: review["review"]?? "No review available",
-            bookImage: review["image"]?? "",
+            bookImage: review["bookImage"]?? "",
           );
         },
       ),
@@ -74,7 +88,7 @@ class _ReadReviewState extends State<ReadReview> {
 class ReviewCard extends StatelessWidget {
   final String bookName;
   final String authorName;
-  final String criticName;
+  final String reviewerName;
   final String rating;
   final String reviewText;
   final String bookImage;
@@ -82,7 +96,7 @@ class ReviewCard extends StatelessWidget {
   const ReviewCard({
     required this.bookName,
     required this.authorName,
-    required this.criticName,
+    required this.reviewerName,
     required this.rating,
     required this.reviewText,
     required this.bookImage,
@@ -112,12 +126,16 @@ class ReviewCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
+                  child: bookImage.isNotEmpty
+                      ? Image.network(
                     bookImage,
                     height: 90,
                     width: 70,
                     fit: BoxFit.fill,
-                  ),
+                    errorBuilder: (context, error, stackTrace) =>
+                        Icon(Icons.broken_image, size: 70), // Handle image load error
+                  )
+                      : Icon(Icons.broken_image, size: 70), // Fallback if no image available
                 ),
                 SizedBox(width: 12),
                 Column(
@@ -132,7 +150,7 @@ class ReviewCard extends StatelessWidget {
                       style: TextStyle(fontSize: 17),
                     ),
                     Text(
-                      "Reviewer Name $criticName",
+                      "Reviewer Name: $reviewerName",
                       style: TextStyle(fontSize: 17),
                     ),
                     Row(

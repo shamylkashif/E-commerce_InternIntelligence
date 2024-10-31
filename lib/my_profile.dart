@@ -196,7 +196,7 @@ class _MyProfileState extends State<MyProfile> {
                                           ? FileImage(_profileImage!) // Show selected local image
                                           : imageUrl != null && imageUrl!.isNotEmpty
                                           ? NetworkImage(imageUrl!)
-                                          : AssetImage('assets/p.jpg') as ImageProvider,
+                                          : AssetImage('assets/defaultImage.jpg') as ImageProvider,
                                     fit: BoxFit.cover
                                   )
                               ),

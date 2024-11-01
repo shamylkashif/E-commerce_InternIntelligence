@@ -90,7 +90,7 @@ class _BookDescriptionState extends State<BookDescription> {
                                     showDragHandle: true,
                                     isDismissible: true,
                                     builder: (context){
-                                      return SellerInformation(bookID: widget.bookID);
+                                      return SellerInformation(book: widget.book);
                                     }
                                 );
                               },

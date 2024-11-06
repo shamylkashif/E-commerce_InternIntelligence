@@ -1,4 +1,5 @@
 import 'package:bookstore/commons/colors.dart';
+import 'package:bookstore/edit-ad.dart';
 import 'package:bookstore/post_ad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,7 +114,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
                   IconButton(
                     icon: Icon(Icons.edit, color: blue,),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAD(existingBookData:post)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EditAdScreen()));
                     },
                   ),
                   IconButton(

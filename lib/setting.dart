@@ -3,7 +3,6 @@ import 'package:bookstore/complain.dart';
 import 'package:flutter/material.dart';
 
 import 'delete_acc.dart';
-import 'notifications.dart';
 
 class MySettings extends StatefulWidget {
   const MySettings({super.key});
@@ -93,60 +92,7 @@ class _MySettingsState extends State<MySettings> {
                     trailing: Icon(Icons.double_arrow, color: blue,),
                   ),
                 ),
-                         ),
-               Container(
-                margin: EdgeInsets.only(top: 30,left: 30,),
-                height: 80,
-                width: 300,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0, 2),
-                        blurRadius: 2,
-                      )
-                    ]
-                ),
-                child: InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Notifications()));
-                  },
-                  child: ListTile(
-                    title: Text('Notifications', style: TextStyle(fontSize: 20,color: blue),),
-                    subtitle: Text('Recommendations', style: TextStyle(fontSize: 14,color: Colors.grey),),
-                    trailing: Icon(Icons.double_arrow, color: blue,),
-                  ),
-                ),
-                         ),
-               Container(
-                margin: EdgeInsets.only(top: 30,left: 30,),
-                height: 80,
-                width: 300,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0, 2),
-                        blurRadius: 2,
-                      )
-                    ]
-                ),
-                child: InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Notifications()));
-                  },
-                  child: ListTile(
-                    title: Text('Select Mode', style: TextStyle(fontSize: 20,color: blue),),
-                    subtitle: Text('Light/Dark', style: TextStyle(fontSize: 14,color: Colors.grey),),
-                    trailing: Icon(Icons.double_arrow, color: blue,),
-                  ),
-                ),
-              ),
-            ],
+                         ),],
           ),
         ],
       ),

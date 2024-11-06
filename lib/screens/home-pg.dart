@@ -16,7 +16,7 @@ import '../ask_ai.dart';
 import '../post_ad.dart';
 import '../search_pg.dart';
 import '../my_profile.dart';
-import 'chat_screen.dart';
+import 'chat_list.dart';
 import 'login-screen.dart';
 
 class HomePage extends StatefulWidget {

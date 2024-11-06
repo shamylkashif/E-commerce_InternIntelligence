@@ -22,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -201,7 +202,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 onTap: () {
                   onTapSignUp(context);
                 },
-                child: Container(
+                child: isLoading ? CircularProgressIndicator(color: Colors.grey,) :
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),

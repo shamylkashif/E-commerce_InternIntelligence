@@ -1,5 +1,7 @@
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/my_chat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatPreviewScreen extends StatefulWidget {
@@ -10,16 +12,63 @@ class ChatPreviewScreen extends StatefulWidget {
 }
 
 class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> allUsers = [];
+  List<Map<String, dynamic>> filteredUsers = [];
+  final String currentUID = FirebaseAuth.instance.currentUser!.uid;
+  String searchQuery = '';
 
-  // Sample chat data
-  final List<Map<String, dynamic>> chats = List.generate(15, (index) => {
-    "name": "Person $index",
-    "message": "Message from person $index",
-    "time": "8:0${index % 10} PM",
-    "unreadCount": index % 2 == 0 ? 1 : 0,
-    "isOnline": index % 3 == 0,
-    "imageAsset": 'assets/images/profile_placeholder.png',
-  });
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+
+  // Fetch users from Firestore based on the search query
+  Future<void> _fetchUsers([String query = '']) async {
+    QuerySnapshot usersSnapshot;
+
+    if (query.isEmpty) {
+      usersSnapshot = await FirebaseFirestore.instance.collection('UsersBookStore').get();
+    } else {
+      usersSnapshot = await FirebaseFirestore.instance
+          .collection('UsersBookStore')
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThanOrEqualTo: query + '\uf8ff') // Allows for range search
+          .get();
+    }
+
+    final users = usersSnapshot.docs.map((doc) {
+      return {
+        "id": doc.id ?? '',
+        "name": doc['name'] ?? 'Unknown',
+        "profileImage": doc['profileImage'] ?? 'assets/images/profile_placeholder.png',
+        "lastMessage": '', // Placeholder, will be updated in MyChat
+        "time": '', // Placeholder, will be updated in MyChat
+        "isOnline": doc['isOnline'] ?? false,
+      };
+    }).where((user) => user['id'] != currentUID).toList();
+
+    setState(() {
+      allUsers = users;
+      filteredUsers = users; // Reset filtered users
+    });
+  }
+
+  // Search and filter function
+  void _onSearchChanged() {
+    final query = _searchController.text;
+    _fetchUsers(query); // Fetch users based on the current query
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +92,10 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                   child: SizedBox(
                     height: 45,
                     child: TextFormField(
+                      onChanged: (value) {
+                        _fetchUsers(value); // Directly fetch users on text change
+                      },
+                     controller: _searchController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -70,10 +123,12 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
 
           // Chat List
           Expanded(
-            child: ListView.builder(
-              itemCount: chats.length,
+            child: filteredUsers.isEmpty
+                ? Center(child: Text('No users found', style: TextStyle(fontSize: 18, color: Colors.grey)))
+                : ListView.builder(
+              itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
-                final chat = chats[index];
+                final chat = filteredUsers[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Container(
@@ -89,11 +144,11 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                       ],
                     ),
                     child: ChatPreviewTile(
-                      title: chat['name'],
-                      subtitle: chat['message'],
+                      receiverId: chat['uid'], // Use uid for the receiverId
+                      name: chat['name'],
+                      profileImage: chat['profileImage'],
+                      lastMessage: chat['lastMessage'],
                       time: chat['time'],
-                      imageAsset: chat['imageAsset'],
-                      unreadCount: chat['unreadCount'],
                       isOnline: chat['isOnline'],
                     ),
                   ),
@@ -108,20 +163,20 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
 }
 
 class ChatPreviewTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String receiverId;
+  final String name;
+  final String profileImage;
+  final String lastMessage;
   final String time;
-  final String imageAsset;
-  final int unreadCount;
   final bool isOnline;
 
   const ChatPreviewTile({
     super.key,
-    required this.title,
-    required this.subtitle,
-    required this.time,
-    required this.imageAsset,
-    this.unreadCount = 0,
+    required this.receiverId,
+    required this.name,
+    required this.profileImage,
+    this.lastMessage = '',
+    this.time = '',
     this.isOnline = false,
   });
 
@@ -131,7 +186,7 @@ class ChatPreviewTile extends StatelessWidget {
       leading: Stack(
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage(imageAsset),
+            backgroundImage: NetworkImage(profileImage),
             radius: 25,
           ),
           if (isOnline)
@@ -151,13 +206,13 @@ class ChatPreviewTile extends StatelessWidget {
         ],
       ),
       title: Text(
-        title,
+        name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 16),
       ),
       subtitle: Text(
-        subtitle,
+        lastMessage,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
@@ -169,25 +224,18 @@ class ChatPreviewTile extends StatelessWidget {
             time,
             style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
           ),
-          if (unreadCount > 0)
-            Container(
-              margin: EdgeInsets.only(top: 5),
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: blue,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                unreadCount.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
         ],
       ),
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyChat()),
+          MaterialPageRoute(
+            builder: (context) => MyChat(
+              receiverId: receiverId,
+              receiverName: name,
+              receiverProfileImage: profileImage,
+            ),
+          ),
         );
       },
     );

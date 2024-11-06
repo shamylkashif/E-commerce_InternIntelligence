@@ -1,4 +1,3 @@
-import 'dart:core';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookstore/screens/home-pg.dart';
@@ -18,14 +17,14 @@ import 'loaders.dart';
 
 
 class PostAD extends StatefulWidget {
-  final Map<String, dynamic>? existingBookData;
-  const PostAD({super.key, this.existingBookData});
+  const PostAD({super.key, });
 
   @override
   State<PostAD> createState() => _PostADState();
 }
 
 class _PostADState extends State<PostAD> {
+
   String? selectedCondition;
   String? selectedCategory;
   bool isChecked = false;
@@ -33,8 +32,8 @@ class _PostADState extends State<PostAD> {
   String? imagePath;
   String? bookId;
   String? currentUID;
-  bool isLoading = false;// To track loading state
-  bool isEditing = false;
+  bool isLoading = false;
+
 
   final ImagePicker _picker = ImagePicker();
   @override
@@ -43,33 +42,15 @@ class _PostADState extends State<PostAD> {
   void initState() {
     super.initState();
     _getCurrentUserUID();
-    if(widget.existingBookData != null){
-      isEditing = true;
-      _populateFields();
-    }
   }
-
-  void _populateFields() {
-    titleController.text = widget.existingBookData!['title']??"";
-    authorController.text = widget.existingBookData!['author']??"";
-    priceController.text = widget.existingBookData!['price']??"";
-    pagesController.text = widget.existingBookData!['pages']??"";
-    languageController.text = widget.existingBookData!['language']??"";
-    descriptionController.text = widget.existingBookData!['description']??"";
-    selectedCategory = widget.existingBookData!['category'];
-    selectedCondition = widget.existingBookData!['condition']??"";
-    isChecked = widget.existingBookData!['useLocation']?? false;
-  }
-
-  // Function to get the current user UID
+  // Fetch current user UID
   Future<void> _getCurrentUserUID() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
-        currentUID = user.uid;
-      });
+      currentUID = user.uid;
     }
   }
+
 
   //Pick image from gallery
   Future<void> _pickImageFromGallery() async {
@@ -162,6 +143,7 @@ class _PostADState extends State<PostAD> {
     return position;
   }
 
+
   //Upload image to firebase and get the download URL
   Future<String?> _uploadImageToFirebase(File imageFile) async {
     try {
@@ -174,7 +156,6 @@ class _PostADState extends State<PostAD> {
       print('Error uploading image: $e');
     }
   }
-
 
 
   //List of Categories
@@ -193,6 +174,7 @@ class _PostADState extends State<PostAD> {
   //String? imageUrl = _image != null ? await _uploadImageToFirebase(_image!) : null;
 
 
+  // Save or Update Book Data
   Future<void> _saveData() async {
     // Validate required fields
     if (selectedCategory == null || selectedCategory!.isEmpty) {
@@ -276,21 +258,21 @@ class _PostADState extends State<PostAD> {
     };
 
     try {
-      if(isEditing){
-        await FirebaseFirestore.instance.collection('AllBooks').doc(widget.existingBookData!['docID']).update(bookData);
-      }else
+      // Add the book data to Firebase (without editing check)
       await FirebaseFirestore.instance.collection('AllBooks').add(bookData);
-      SnackbarHelper.show(context, 'Book data saved successfully', backgroundColor: Colors.green);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+      _showSnackbar('Book data saved successfully', Colors.green);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {
-      SnackbarHelper.show(context, 'Failed to save book: $e', backgroundColor: Colors.red);
+      _showSnackbar('Failed to save book: $e', Colors.red);
     } finally {
       setState(() {
         isLoading = false; // Hide loader
       });
     }
   }
-
+  void _showSnackbar(String message, Color color) {
+    SnackbarHelper.show(context, message, backgroundColor: color);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

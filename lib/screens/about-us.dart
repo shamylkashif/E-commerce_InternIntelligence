@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../commons/colors.dart';
 
@@ -11,6 +12,21 @@ class AboutUs extends StatefulWidget {
 }
 
 class _AboutUsState extends State<AboutUs> {
+  //Define Urls
+  String email =  "mailto:test@example.com";
+  String linkedInUrl = "https://www.linkedin.com";
+  String instagramUrl = "https://www.instagram.com";
+  String twitterUrl = "https://www.twitter.com";
+
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,10 +87,10 @@ class _AboutUsState extends State<AboutUs> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.email, color: blue, size: 25)),
-                      IconButton(onPressed: () {}, icon: FaIcon(FontAwesomeIcons.linkedinIn, color: Colors.blue, size: 25)),
-                      IconButton(onPressed: () {}, icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.purple, size: 25)),
-                      IconButton(onPressed: () {}, icon: FaIcon(FontAwesomeIcons.twitter, color: Colors.blue, size: 25)),
+                      IconButton(onPressed: () => _launchURL(email), icon: Icon(Icons.email, color: blue, size: 25)),
+                      IconButton(onPressed: () => _launchURL(linkedInUrl), icon: FaIcon(FontAwesomeIcons.linkedinIn, color: Colors.blue, size: 25)),
+                      IconButton(onPressed: () => _launchURL(instagramUrl), icon: FaIcon(FontAwesomeIcons.instagram, color: Colors.purple, size: 25)),
+                      IconButton(onPressed: () => _launchURL(twitterUrl), icon: FaIcon(FontAwesomeIcons.twitter, color: Colors.blue, size: 25)),
                     ],
                   ),
                 ),

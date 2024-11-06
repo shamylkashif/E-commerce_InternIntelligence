@@ -1,18 +1,30 @@
+
 import 'package:bookstore/commons/colors.dart';
+
 import 'package:flutter/material.dart';
 
 class MyChat extends StatefulWidget {
-  const MyChat({super.key});
+  final String receiverId;
+  final String receiverName;
+  final String receiverProfileImage;
+  const MyChat({super.key,
+    required this.receiverId,
+    required this.receiverName,
+    required this.receiverProfileImage,});
 
   @override
   State<MyChat> createState() => _MyChatState();
 }
 
 class _MyChatState extends State<MyChat> {
-  TextEditingController _controller = TextEditingController();
+
+
+
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 90,
@@ -26,7 +38,7 @@ class _MyChatState extends State<MyChat> {
         title: ListTile(
           leading: CircleAvatar(
             radius: 20,
-            backgroundImage: AssetImage('assets/images/profile_placeholder.png'),
+           backgroundImage: AssetImage('assets/defaultImage.jpg'),
           ),
           title: Text('Shamyl',
             style:TextStyle(fontSize: 16, color: Colors.white) ,),
@@ -65,10 +77,8 @@ class _MyChatState extends State<MyChat> {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              color: Colors.grey[100], // Placeholder for chat messages
-            ),
-          ),
+              child: Container(color: Colors.grey,),
+              ),
           Container(
             color: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 1.0),
@@ -94,7 +104,6 @@ class _MyChatState extends State<MyChat> {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: _controller,
                     decoration: InputDecoration(
                       hintText: 'Type your message here',
                       hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
@@ -109,9 +118,9 @@ class _MyChatState extends State<MyChat> {
                 ),
                 IconButton(
                   icon: Icon(Icons.send, color: blue,),
-                  onPressed: () {
-                    // Implement send functionality here
-                  },
+                  onPressed: (){
+
+                  }
                 ),
               ],
             ),

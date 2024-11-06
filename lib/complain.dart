@@ -60,28 +60,21 @@ class _ComplaintState extends State<Complaint> {
     // Example email address
     String email = "shamylkashif0205@gmail.com";
 
-    if (selectedCategory == null || _controller.text.isEmpty) {
-      _showErrorDialog("Please fill out all fields.");
-      return;
-    }
-
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: email,
-      query: 'subject=Complaint about ${selectedCategory!}&body=${_controller.text}',
+      query: 'subject=${Uri.encodeComponent('Complaint about ${selectedCategory!}')}&body=${Uri.encodeComponent(_controller.text)}',
     );
 
     try {
-      if (await canLaunchUrl(emailUri)) {
-        await canLaunchUrl(emailUri);
-        _controller.clear(); // Clear the text field after submission
+      if (await launchUrl(emailUri, mode: LaunchMode.externalApplication)) {
+        _controller.clear();
         setState(() {
-          selectedCategory = null; // Reset the selected category
-          isButtonEnabled = false; // Disable the button again
+          selectedCategory = null;
+          isButtonEnabled = false;
         });
-        // Optionally show a success dialog or snackbar here
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Email has been sent.')),
+          const SnackBar(content: Text('Email has been sent.')),
         );
       } else {
         _showErrorDialog("Could not launch the email client.");
@@ -161,6 +154,7 @@ class _ComplaintState extends State<Complaint> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               controller: _controller,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -179,19 +173,20 @@ class _ComplaintState extends State<Complaint> {
               },
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 270,left: 20),
-            height: 50,
-            width: 300,
-            decoration: BoxDecoration(
-              color: isButtonEnabled ? yellow : Colors.grey ,
-              borderRadius: BorderRadius.circular(20),
+          GestureDetector(
+            onTap: isButtonEnabled ? _submitComplaint : null,
+            child: Container(
+              margin: EdgeInsets.only(top: 270,left: 20),
+              height: 50,
+              width: 300,
+              decoration: BoxDecoration(
+                color: isButtonEnabled ? yellow : Colors.grey ,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                  child:
+                  Text('Submit', style: TextStyle(color: blue,fontSize: 18),)),
             ),
-            child: Center(
-                child:
-                TextButton(
-                    onPressed: isButtonEnabled ? _submitComplaint : null,
-                    child: Text('Submit', style: TextStyle(color: blue,fontSize: 18),))),
           ),
         ],
       ),

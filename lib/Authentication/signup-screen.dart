@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Repository/user_repo.dart';
 import '../commons/colors.dart';
 import '../loaders.dart';
-import 'home-pg.dart';
+import '../Dashboards/home-pg.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

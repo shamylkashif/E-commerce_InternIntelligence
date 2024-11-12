@@ -1,8 +1,8 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/screens/home-pg.dart';
+import 'package:bookstore/Dashboards/home-pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'book_desp.dart';
+import '../Description_Review/book_desp.dart';
 
 class CustomTabBar extends StatefulWidget {
   @override

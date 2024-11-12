@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bookstore/screens/home-pg.dart';
-import 'package:bookstore/screens/login-screen.dart';
+import 'package:bookstore/Dashboards/home-pg.dart';
+import 'package:bookstore/Authentication/user-login-screen.dart';
 import 'package:flutter/material.dart';
 
 class SpleshScreen extends StatefulWidget {

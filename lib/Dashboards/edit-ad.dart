@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:bookstore/screens/home-pg.dart';
+import 'package:bookstore/Dashboards/home-pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';

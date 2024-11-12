@@ -1,6 +1,6 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/edit-ad.dart';
-import 'package:bookstore/post_ad.dart';
+import 'package:bookstore/Dashboards/edit-ad.dart';
+import 'package:bookstore/BookDetails/post_ad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -2,7 +2,7 @@ import 'package:bookstore/commons/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:bookstore/my_chat.dart';
+import 'package:bookstore/Chat/my_chat.dart';
 
 class ChatPreviewScreen extends StatefulWidget {
   const ChatPreviewScreen({super.key});

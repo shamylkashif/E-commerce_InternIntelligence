@@ -1,11 +1,11 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/screens/home-pg.dart';
-import 'package:bookstore/screens/signup-screen.dart';
+import 'package:bookstore/Dashboards/home-pg.dart';
+import 'package:bookstore/Authentication/signup-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/user_model.dart';
 import '../Repository/user_repo.dart';
-import '../forgotpassword.dart';
+import 'forgotpassword.dart';
 import '../loaders.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -261,10 +261,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
             // Forgot Password
             Padding(
-              padding: const EdgeInsets.only(top: 465, left: 125),
+              padding: const EdgeInsets.only(top: 470, left: 125),
               child: InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
@@ -277,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             // Signup Navigation
             Padding(
-              padding: const EdgeInsets.only(top: 490, left: 95),
+              padding: const EdgeInsets.only(top: 500, left: 95),
               child: Row(
                 children: [
                   const Text(

@@ -1,6 +1,6 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/screens/book-review.dart';
-import 'package:bookstore/screens/seller-info.dart';
+import 'package:bookstore/Description_Review/book-review.dart';
+import 'package:bookstore/Description_Review/seller-info.dart';
 import 'package:flutter/material.dart';
 
 class BookDescription extends StatefulWidget {

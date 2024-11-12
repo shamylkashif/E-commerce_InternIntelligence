@@ -1,8 +1,8 @@
-import 'package:bookstore/password_verification.dart';
-import 'package:bookstore/screens/signup-screen.dart';
-import 'package:email_auth/email_auth.dart';
+import 'package:bookstore/Authentication/signup-screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class ForgotPassword extends StatefulWidget {
@@ -14,24 +14,8 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController emailController = TextEditingController();
-  final EmailAuth emailAuth = EmailAuth(sessionName: "Your App Session");
+  final auth = FirebaseAuth.instance;
 
-  Future<void> sendOtp(BuildContext context) async {
-    bool result = await emailAuth.sendOtp(recipientMail: emailController.text.trim());
-    if (result) {
-      // Navigate to OTP verification screen and pass the email as an argument
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PasswordVerification(email: emailController.text.trim()),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send OTP. Try again.')),
-      );
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,16 +54,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           borderRadius: BorderRadius.circular(28)
                       )
                   ),
-                  // validator: (value) {
-                  //   if (value == null || value.isEmpty) {
-                  //     return 'Please enter your email';
-                  //   }
-                  //   // Basic email validation
-                  //   if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                  //     return 'Please enter a valid email';
-                  //   }
-                  //   return null;
-                  // },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    // Basic email validation
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
               ),
               SizedBox(height: 18,),
@@ -90,7 +74,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: Text('Back to Sign in')),
               SizedBox(height: 35,),
               InkWell(
-                onTap: ()=> sendOtp(context),
+                onTap: (){
+                     auth.sendPasswordResetEmail(email: emailController.text.toString()).then((value){
+                       Fluttertoast.showToast(
+                         msg: 'We have sent you password reset email',
+                         toastLength: Toast.LENGTH_SHORT,
+                         gravity: ToastGravity.BOTTOM,
+                         timeInSecForIosWeb: 1,
+                         backgroundColor: Colors.black,
+                         textColor: Colors.white,
+                         fontSize: 16.0,
+                       );
+                     }). onError((error, stackTrace){
+                       Fluttertoast.showToast(
+                         msg: error.toString(),
+                         toastLength: Toast.LENGTH_SHORT,
+                         gravity: ToastGravity.BOTTOM,
+                         timeInSecForIosWeb: 1,
+                         backgroundColor: Colors.black,
+                         textColor: Colors.white,
+                         fontSize: 16.0,
+                       );
+                     });
+                },
                 child: Container(
                   height: 55,
                   width: 310,

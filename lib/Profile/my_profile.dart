@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/screens/login-screen.dart';
-import 'package:bookstore/screens/profile_choice.dart';
+import 'package:bookstore/Authentication/user-login-screen.dart';
+import 'package:bookstore/Profile/profile_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'loaders.dart';
+import '../loaders.dart';
 
 
 class MyProfile extends StatefulWidget {

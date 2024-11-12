@@ -1,23 +1,23 @@
 
-import 'package:bookstore/book_desp.dart';
+import 'package:bookstore/Description_Review/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/custom_tab_control.dart';
-import 'package:bookstore/my_posts.dart';
-import 'package:bookstore/read_review.dart';
+import 'package:bookstore/Dashboards/custom_tab_control.dart';
+import 'package:bookstore/BookDetails/my_posts.dart';
+import 'package:bookstore/Description_Review/read_review.dart';
 import 'package:bookstore/screens/about-us.dart';
-import 'package:bookstore/setting.dart';
+import 'package:bookstore/Settings/setting.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../ask_ai.dart';
-import '../post_ad.dart';
-import '../search_pg.dart';
-import '../my_profile.dart';
-import 'chat_list.dart';
-import 'login-screen.dart';
+import '../screens/ask_ai.dart';
+import '../BookDetails/post_ad.dart';
+import '../screens/search_pg.dart';
+import '../Profile/my_profile.dart';
+import '../Chat/chat_list.dart';
+import '../Authentication/user-login-screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

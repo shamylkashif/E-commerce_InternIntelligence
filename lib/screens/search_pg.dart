@@ -1,4 +1,4 @@
-import 'package:bookstore/book_desp.dart';
+import 'package:bookstore/Description_Review/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

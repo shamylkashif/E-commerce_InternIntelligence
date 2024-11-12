@@ -1,10 +1,10 @@
-import 'package:bookstore/new_password.dart';
-import 'package:bookstore/screens/signup-screen.dart';
+import 'package:bookstore/Authentication/new_password.dart';
+import 'package:bookstore/Authentication/signup-screen.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'commons/colors.dart';
+import '../commons/colors.dart';
 
 class PasswordVerification extends StatefulWidget {
   final String email;

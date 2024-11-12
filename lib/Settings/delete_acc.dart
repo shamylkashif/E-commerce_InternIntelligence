@@ -1,9 +1,9 @@
-import 'package:bookstore/screens/login-screen.dart';
+import 'package:bookstore/Authentication/user-login-screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'commons/colors.dart';
+import '../commons/colors.dart';
 
 class DeleteAccount extends StatefulWidget {
   const DeleteAccount({super.key});

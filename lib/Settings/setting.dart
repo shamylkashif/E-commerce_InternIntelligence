@@ -1,5 +1,5 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/complain.dart';
+import 'package:bookstore/Settings/complain.dart';
 import 'package:flutter/material.dart';
 
 import 'delete_acc.dart';

@@ -1,7 +1,7 @@
-import 'package:bookstore/screens/login-screen.dart';
+import 'package:bookstore/Authentication/user-login-screen.dart';
 import 'package:flutter/material.dart';
 
-import 'commons/colors.dart';
+import '../commons/colors.dart';
 
 class NewPassword extends StatefulWidget {
   const NewPassword({super.key});

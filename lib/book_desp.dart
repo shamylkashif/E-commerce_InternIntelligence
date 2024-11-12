@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 
 class BookDescription extends StatefulWidget {
   final Map<String, dynamic> book;// Declare book variable
-  final String bookID;
-  const BookDescription({Key? key, required this.book, required this.bookID}) : super(key: key);
+  const BookDescription({Key? key, required this.book}) : super(key: key);
 
   @override
   State<BookDescription> createState() => _BookDescriptionState();
@@ -133,7 +132,7 @@ class _BookDescriptionState extends State<BookDescription> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('4.1', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600],fontSize: 14),),
+                            Text(widget.book['rating'].toString() , style: TextStyle(fontWeight: FontWeight.bold,color: Colors.yellow[600],fontSize: 14),),
                             Text('Rating', style: TextStyle(fontSize: 12, color: Colors.grey),),
                           ],
                         ),

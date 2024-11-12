@@ -62,6 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
       isUsers(email).then((isUsers) {
         if (isUsers) {
           _users.signInWithFirebaseAuth(email, password).then((success) {
+            setState(() {
+              isLoading = false;
+            });
             if (success) {
               _saveEmailToSharedPreferences(email);
               Navigator.pushReplacement(
@@ -73,13 +76,26 @@ class _LoginScreenState extends State<LoginScreen> {
               SnackbarHelper.show(context, 'Invalid email or password. Please try again.', backgroundColor: Colors.red);
             }
           }).catchError((error) {
+            setState(() {
+              isLoading = false;
+            });
             SnackbarHelper.show(context, 'An error occurred during sign-in. Please try again.', backgroundColor: Colors.red);
           });
         } else {
+          setState(() {
+            isLoading = false;
+          });
           SnackbarHelper.show(context, 'Email is not registered.', backgroundColor: Colors.red);
         }
       }).catchError((error) {
+        setState(() {
+          isLoading = false;
+        });
         SnackbarHelper.show(context, 'An error occurred while checking the email.', backgroundColor: Colors.red);
+      });
+    } else {
+      setState(() {
+        isLoading = false;
       });
     }
   }

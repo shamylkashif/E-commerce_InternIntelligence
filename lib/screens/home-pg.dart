@@ -246,20 +246,47 @@ class _HomePageContentState extends State<HomePageContent> {
   //Fetch data from firestore
   Future<void> _fetchPopularBooks() async {
     try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
-      List<Map<String,dynamic>> books = [];
-      for(var doc in snapshot.docs) {
-        books.add({
-          'imageUrl' : doc['imageUrl'],
-          'title' : doc['title'],
-          'author' : doc['author'],
-        });
+      // Step 1: Fetch all books from the AllBooks collection
+      QuerySnapshot bookSnapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
+      List<Map<String, dynamic>> bookList = [];
+
+      // Step 2: Iterate over each book to fetch its ratings
+      for (var doc in bookSnapshot.docs) {
+        String bookId = doc['bookID'];
+
+        // Fetch ratings for this book from the ratings collection
+        QuerySnapshot ratingSnapshot = await FirebaseFirestore.instance
+            .collection('ratings')
+            .where('bookId', isEqualTo: bookId)
+            .get();
+
+        if (ratingSnapshot.docs.isNotEmpty) {
+          // Calculate the highest rating for this book
+          double highestRating = ratingSnapshot.docs
+              .map((ratingDoc) => ratingDoc['rating'] as double)
+              .reduce((a, b) => a > b ? a : b);
+
+          // Add the book data along with the highest rating to the list
+          bookList.add({
+            'imageUrl': doc['imageUrl'],
+            'title': doc['title'],
+            'author': doc['author'],
+            'description': doc['description'],
+            'pages': doc['pages'],
+            'price': doc['price'],
+            'condition': doc['condition'],
+            'language': doc['language'],
+            'rating': highestRating, // Include the highest rating
+          });
+        }
       }
+
+      // Step 3: Update the state with the popular books list
       setState(() {
-        pBook = books;
+        pBook = bookList;
       });
     } catch (e) {
-      print('Error Fetching Book\'s data:$e');
+      print('Error Fetching Book\'s data: $e');
     }
   }
   @override
@@ -377,7 +404,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                                 color: blue, size: 17),
                                             SizedBox(width: 4),
                                             Text(
-                                              pBookItem['rating'].toString()??"0.0",
+                                              pBookItem['rating'].toString(),
                                               style: TextStyle(
                                                 color: blue,
                                                 fontSize: 15,
@@ -393,7 +420,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      BookDescription(book: pBookItem, bookID: '',)));
+                                                      BookDescription(book: pBookItem,)));
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(

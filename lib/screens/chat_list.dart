@@ -1,8 +1,8 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/my_chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:bookstore/my_chat.dart';
 
 class ChatPreviewScreen extends StatefulWidget {
   const ChatPreviewScreen({super.key});
@@ -16,8 +16,6 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
   List<Map<String, dynamic>> allUsers = [];
   List<Map<String, dynamic>> filteredUsers = [];
   final String currentUID = FirebaseAuth.instance.currentUser!.uid;
-  String searchQuery = '';
-
 
   @override
   void initState() {
@@ -32,43 +30,36 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     super.dispose();
   }
 
-
-  // Fetch users from Firestore based on the search query
-  Future<void> _fetchUsers([String query = '']) async {
-    QuerySnapshot usersSnapshot;
-
-    if (query.isEmpty) {
-      usersSnapshot = await FirebaseFirestore.instance.collection('UsersBookStore').get();
-    } else {
-      usersSnapshot = await FirebaseFirestore.instance
-          .collection('UsersBookStore')
-          .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: query + '\uf8ff') // Allows for range search
-          .get();
-    }
+  // Fetch all users once and store in allUsers
+  Future<void> _fetchUsers() async {
+    QuerySnapshot usersSnapshot = await FirebaseFirestore.instance
+        .collection('UsersBookStore')
+        .get();
 
     final users = usersSnapshot.docs.map((doc) {
       return {
-        "id": doc.id ?? '',
+        "id": doc['uid'] ?? 'Unknown uid',
         "name": doc['name'] ?? 'Unknown',
         "profileImage": doc['profileImage'] ?? 'assets/images/profile_placeholder.png',
-        "lastMessage": '', // Placeholder, will be updated in MyChat
-        "time": '', // Placeholder, will be updated in MyChat
-        "isOnline": doc['isOnline'] ?? false,
       };
     }).where((user) => user['id'] != currentUID).toList();
 
     setState(() {
       allUsers = users;
-      filteredUsers = users; // Reset filtered users
+      filteredUsers = users;
     });
   }
 
   // Search and filter function
   void _onSearchChanged() {
-    final query = _searchController.text;
-    _fetchUsers(query); // Fetch users based on the current query
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredUsers = allUsers
+          .where((user) => user['name'].toLowerCase().contains(query))
+          .toList();
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,30 +70,27 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           // Search Bar
           Container(
             color: blue,
-            padding: EdgeInsets.only(left: 10, right: 10, top: 40, bottom: 20),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 40, bottom: 20),
             child: Row(
               children: [
                 IconButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_circle_left_outlined, color: Colors.white),
+                  icon: const Icon(Icons.arrow_circle_left_outlined, color: Colors.white),
                 ),
                 Expanded(
                   child: SizedBox(
                     height: 45,
                     child: TextFormField(
-                      onChanged: (value) {
-                        _fetchUsers(value); // Directly fetch users on text change
-                      },
-                     controller: _searchController,
+                      controller: _searchController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
                         hintText: "Search",
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                        hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                         fillColor: Colors.white,
                         filled: true,
                         focusedBorder: OutlineInputBorder(
@@ -124,7 +112,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           // Chat List
           Expanded(
             child: filteredUsers.isEmpty
-                ? Center(child: Text('No users found', style: TextStyle(fontSize: 18, color: Colors.grey)))
+                ? const Center(child: Text('No users found', style: TextStyle(fontSize: 18, color: Colors.grey)))
                 : ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
@@ -139,17 +127,25 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.4),
                           blurRadius: 6,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
                     child: ChatPreviewTile(
-                      receiverId: chat['uid'], // Use uid for the receiverId
+                      receiverId: chat['id'],
                       name: chat['name'],
                       profileImage: chat['profileImage'],
-                      lastMessage: chat['lastMessage'],
-                      time: chat['time'],
-                      isOnline: chat['isOnline'],
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyChat(
+                                receiverId: chat['id'],
+                                name: chat['name'],
+                                profileImage:chat['profileImage']),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 );
@@ -166,78 +162,30 @@ class ChatPreviewTile extends StatelessWidget {
   final String receiverId;
   final String name;
   final String profileImage;
-  final String lastMessage;
-  final String time;
-  final bool isOnline;
+  final VoidCallback onTap;
 
   const ChatPreviewTile({
     super.key,
     required this.receiverId,
     required this.name,
     required this.profileImage,
-    this.lastMessage = '',
-    this.time = '',
-    this.isOnline = false,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(profileImage),
-            radius: 25,
-          ),
-          if (isOnline)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-              ),
-            ),
-        ],
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(profileImage),
+        radius: 25,
       ),
       title: Text(
         name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
-      subtitle: Text(
-        lastMessage,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            time,
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-          ),
-        ],
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyChat(
-              receiverId: receiverId,
-              receiverName: name,
-              receiverProfileImage: profileImage,
-            ),
-          ),
-        );
-      },
+      onTap: onTap,
     );
   }
 }

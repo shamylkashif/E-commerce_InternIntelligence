@@ -47,20 +47,41 @@ class _SearchPageState extends State<SearchPage> {
     fetchBooks();
   }
   //Fetch book data
- Future <void> fetchBooks() async {
+  Future<void> fetchBooks() async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
-      List<Map<String, dynamic>> fetchedBooks = snapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      List<Map<String, dynamic>> fetchedBooks = [];
+
+      for (var doc in snapshot.docs) {
+        var bookData = doc.data() as Map<String, dynamic>;
+        String bookId = doc['bookID'];
+
+        // Fetch the highest rating for each book from the ratings collection
+        QuerySnapshot ratingSnapshot = await FirebaseFirestore.instance
+            .collection('ratings')
+            .where('bookId', isEqualTo: bookId)
+            .get();
+
+        double highestRating = 0.0;
+        if (ratingSnapshot.docs.isNotEmpty) {
+          highestRating = ratingSnapshot.docs
+              .map((ratingDoc) => (ratingDoc['rating'] as num).toDouble())
+              .reduce((a, b) => a > b ? a : b);
+        }
+
+        // Add the highest rating to the book data
+        bookData['rating'] = highestRating;
+        fetchedBooks.add(bookData);
+      }
+
       setState(() {
         allBooks = fetchedBooks;
         displayedBooks = allBooks;
       });
-    } catch(e){
-      print('Error fetching books: $e');
+    } catch (e) {
+      print("Error fetching books: $e");
     }
- }
+  }
 
    //Search books
   void searchBooks(String query) {
@@ -197,7 +218,7 @@ class _SearchPageState extends State<SearchPage> {
                         borderRadius: BorderRadius.circular(10),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book, bookID: '',)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookDescription(book: book)));
                           },
                           child: SizedBox(
                             height: 225,  // Fixed height for the image

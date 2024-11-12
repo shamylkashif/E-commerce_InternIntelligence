@@ -46,13 +46,15 @@ class _BookReviewState extends State<BookReview> {
 
 
   //Method to save the rating and review to firestore
-  Future<void> _saveReview() async{
-
-    //Check if rating and text field are empty
-    if(_userRating == 0.0 && _reviewController.text.trim().isEmpty){
+  Future<void> _saveReview() async {
+    // Check if rating and text field are empty
+    if (_userRating == 0.0 && _reviewController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please provide rating or review to submit', style: TextStyle(color: Colors.red),
-        ),
+        SnackBar(
+          content: Text(
+            'Please provide a rating or review to submit',
+            style: TextStyle(color: Colors.red),
+          ),
         ),
       );
       return;
@@ -60,29 +62,53 @@ class _BookReviewState extends State<BookReview> {
 
     final bookId = widget.book['bookID'];
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    if(bookId != null && userId != null) {
-      await FirebaseFirestore.instance
-          .collection('ratings')
-          .doc(userId)
-          .set({
-         'rating' : _userRating,
-         'review' :_reviewController.text,
-         'reviewerName': _userName,
-         'bookImage' : widget.book['imageUrl'],
-         'bookName' : widget.book['title'],
-         'authorName' : widget.book['author']
-         // 'timestamp' : FieldValue.serverTimestamp(),
-      });
 
-      //Display success message
+    if (bookId != null && userId != null) {
+      // Use a combination of userId and bookId to create a unique document ID for each user-book review
+      final reviewDocId = '${userId}_$bookId';
+      final reviewRef = FirebaseFirestore.instance.collection('ratings').doc(reviewDocId);
+
+      // Check if a review for this user and book already exists
+      final existingReview = await reviewRef.get();
+
+      if (existingReview.exists) {
+        // Update the existing review
+        await reviewRef.update({
+          'rating': _userRating,
+          'review': _reviewController.text,
+          'reviewerName': _userName,
+          'bookImage': widget.book['imageUrl'],
+          'bookName': widget.book['title'],
+          'authorName': widget.book['author'],
+        });
+      } else {
+        // Create a new review document
+        await reviewRef.set({
+          'userId': userId,
+          'bookId': bookId,
+          'rating': _userRating,
+          'review': _reviewController.text,
+          'reviewerName': _userName,
+          'bookImage': widget.book['imageUrl'],
+          'bookName': widget.book['title'],
+          'authorName': widget.book['author'],
+        });
+      }
+
+      // Display success message
       ScaffoldMessenger.of(context).showSnackBar(
-        
-        SnackBar(content: Text('Review saved successfully!',style: TextStyle(color: Colors.green),))
+        SnackBar(
+          content: Text(
+            'Review saved successfully!',
+            style: TextStyle(color: Colors.green),
+          ),
+        ),
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReadReview()));
+
+      // Navigate to ReadReview page
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ReadReview()));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

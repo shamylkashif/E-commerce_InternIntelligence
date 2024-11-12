@@ -35,7 +35,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
 
         final posts = querySnapshot.docs.map((doc) {
           return {
-            'bookId': doc.id,
+            'bookId': doc['bookID'] ?? 'Unknown Book ID',
             'bookName': doc['title'] ?? 'Unknown Book',
             'authorName': doc['author'] ?? 'Unknown Author',
             'bookImage': doc['imageUrl'] ?? '',
@@ -51,33 +51,83 @@ class _MyPostsPageState extends State<MyPostsPage> {
     }
   }
 
-  void deletePost(int index){
+  void deletePost(int index) {
     showDialog(
-        context: context,
-        builder: (context)=>AlertDialog(
-          title: Text('Delete Post', ),
-          content: Text('Are you sure you want to delete this post?'),
-          actions: [
-            TextButton(
-                onPressed:()=> Navigator.pop,
-                child: Text('Cancel')
-            ),
-            TextButton(
-                onPressed:(){
-                  //Remove post from list
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Post'),
+        content: Text('Are you sure you want to delete this post?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final post = myPosts[index];
+              final bookId = post['bookId'];  // The custom book ID, not Firestore document ID
+
+              try {
+                // Query Firestore to find the document with this bookId
+                final querySnapshot = await FirebaseFirestore.instance
+                    .collection('AllBooks')
+                    .where('bookID', isEqualTo: bookId)
+                    .get();
+
+                // If document exists, delete it
+                if (querySnapshot.docs.isNotEmpty) {
+                  final document = querySnapshot.docs.first;
+
+                  // Delete the document from Firestore
+                  await document.reference.delete();
+
+                  // Remove the post from the local list
                   setState(() {
                     myPosts.removeAt(index);
                   });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar
-                    (SnackBar(content: Text('Post Deleted Successfully', style: TextStyle(color: Colors.green),))
-                  );
-                },
 
-                child: Text('Delete', style: TextStyle(color: Colors.red),))
-          ],
-        ));
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Post Deleted Successfully',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                  );
+                } else {
+                  // Handle case where the document was not found
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Post not found in database',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  );
+                }
+              } catch (e) {
+                print("Error deleting post: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Failed to delete post',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +139,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
         ),
       ),
       body: myPosts.isEmpty
-          ? Center(child: CircularProgressIndicator(color: Colors.grey,))
+          ? Center(child: Text('You have not uploaded any post yet!'))
           : ListView.builder(
         itemCount: myPosts.length,
         itemBuilder: (context, index) {
@@ -114,7 +164,8 @@ class _MyPostsPageState extends State<MyPostsPage> {
                   IconButton(
                     icon: Icon(Icons.edit, color: blue,),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EditAdScreen()));
+                      final bookID = post['bookId']; // Get the book ID for this post
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EditPost(bookID: bookID,)));
                     },
                   ),
                   IconButton(

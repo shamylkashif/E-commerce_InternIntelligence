@@ -19,10 +19,11 @@ class _SearchPageState extends State<SearchPage> {
   List<Map<String, dynamic>> allBooks = [];
   List<Map<String, dynamic>> displayedBooks = [];
 
-
   bool reverse1 = false;
   bool reverse2 = false;
 
+  // Track the selected category
+  String selectedCategory = '';
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
     scrollController1 = ScrollController();
     scrollController2 = ScrollController();
 
-   //Timer of scrolling
+    // Timer for scrolling
     timer = Timer.periodic(const Duration(milliseconds: 90), (Timer t) {
       autoScroll(scrollController1, reverse1, (isReverse) {
         setState(() {
@@ -46,7 +47,8 @@ class _SearchPageState extends State<SearchPage> {
     });
     fetchBooks();
   }
-  //Fetch book data
+
+  // Fetch book data from Firestore
   Future<void> fetchBooks() async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
@@ -83,20 +85,21 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-   //Search books
+  // Search books based on title or author
   void searchBooks(String query) {
     setState(() {
       searchQuery = query;
-      if(query.isEmpty){
+      if (query.isEmpty) {
         displayedBooks = allBooks;
       } else {
-        displayedBooks = allBooks.where((book)=>
-        (book['title'] as String ).toLowerCase().contains(query.toLowerCase()) ||
-            (book['author'] as String ).toLowerCase().contains(query.toLowerCase())).toList();
+        displayedBooks = allBooks.where((book) =>
+        (book['title'] as String).toLowerCase().contains(query.toLowerCase()) ||
+            (book['author'] as String).toLowerCase().contains(query.toLowerCase())).toList();
       }
     });
   }
-   //Scroll Direction
+
+  // Scroll direction control
   void autoScroll(ScrollController controller, bool reverse, Function(bool) updateDirection) {
     double maxScrollExtent = controller.position.maxScrollExtent;
     double minScrollExtent = controller.position.minScrollExtent;
@@ -112,6 +115,22 @@ class _SearchPageState extends State<SearchPage> {
         updateDirection(false);  // Change direction to forward
       }
     }
+  }
+
+  // Handle category click
+  void handleCategoryClick(String category) {
+    setState(() {
+      if (selectedCategory == category) {
+        // If the same category is clicked, reset to show all books
+        selectedCategory = '';
+        displayedBooks = allBooks;
+      } else {
+        // Otherwise, filter books by the selected category
+        selectedCategory = category;
+        displayedBooks = allBooks.where((book) =>
+        (book['category'] as String).toLowerCase() == category.toLowerCase()).toList();
+      }
+    });
   }
 
   @override
@@ -132,7 +151,7 @@ class _SearchPageState extends State<SearchPage> {
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
             child: TextField(
-              onChanged:  (query){
+              onChanged: (query) {
                 searchBooks(query);
               },
               style: const TextStyle(color: Colors.black),
@@ -165,14 +184,14 @@ class _SearchPageState extends State<SearchPage> {
                     controller: scrollController1,
                     scrollDirection: Axis.horizontal,
                     children: [
-                      CategoryContainer(label: 'Fantasy'),
-                      CategoryContainer(label: 'Horror'),
-                      CategoryContainer(label: 'Adventure'),
-                      CategoryContainer(label: 'Self-help'),
-                      CategoryContainer(label: 'Travel'),
-                      CategoryContainer(label: 'Cooking'),
-                      CategoryContainer(label: 'Crime'),
-                      CategoryContainer(label: 'Politics'),
+                      CategoryContainer(label: 'Fantasy', onTap: () => handleCategoryClick('Fantasy')),
+                      CategoryContainer(label: 'Horror', onTap: () => handleCategoryClick('Horror')),
+                      CategoryContainer(label: 'Adventure', onTap: () => handleCategoryClick('Adventure')),
+                      CategoryContainer(label: 'Self-help', onTap: () => handleCategoryClick('Self-help')),
+                      CategoryContainer(label: 'Travel', onTap: () => handleCategoryClick('Travel')),
+                      CategoryContainer(label: 'Cooking', onTap: () => handleCategoryClick('Cooking')),
+                      CategoryContainer(label: 'Crime', onTap: () => handleCategoryClick('Crime')),
+                      CategoryContainer(label: 'Politics', onTap: () => handleCategoryClick('Politics')),
                     ],
                   ),
                 ),
@@ -181,14 +200,14 @@ class _SearchPageState extends State<SearchPage> {
                     controller: scrollController2,
                     scrollDirection: Axis.horizontal,
                     children: [
-                      CategoryContainer(label: 'Art'),
-                      CategoryContainer(label: 'Early Readers'),
-                      CategoryContainer(label: 'Text Books'),
-                      CategoryContainer(label: 'Study Guides'),
-                      CategoryContainer(label: 'Test Preparation'),
-                      CategoryContainer(label: 'Islam'),
-                      CategoryContainer(label: 'Nature'),
-                      CategoryContainer(label: 'Environment'),
+                      CategoryContainer(label: 'Fiction', onTap: () => handleCategoryClick('Fiction')),
+                      CategoryContainer(label: 'Mystery', onTap: () => handleCategoryClick('Mystery')),
+                      CategoryContainer(label: 'Text Books', onTap: () => handleCategoryClick('Text Books')),
+                      CategoryContainer(label: 'Study Guides', onTap: () => handleCategoryClick('Study Guides')),
+                      CategoryContainer(label: 'Test Preparation', onTap: () => handleCategoryClick('Test Preparation')),
+                      CategoryContainer(label: 'Islam', onTap: () => handleCategoryClick('Islam')),
+                      CategoryContainer(label: 'Nature', onTap: () => handleCategoryClick('Nature')),
+                      CategoryContainer(label: 'Environment', onTap: () => handleCategoryClick('Environment')),
                     ],
                   ),
                 ),
@@ -196,9 +215,9 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           // Books Section
-          allBooks.isEmpty
-              ? Center(child: CircularProgressIndicator(color: Colors.grey,),)
-         :  Expanded(
+          displayedBooks.isEmpty
+              ? Center(child: Text("No books available for this category", style: TextStyle(color: Colors.grey)))
+              : Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
@@ -232,7 +251,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       const SizedBox(height: 8), // Add some spacing between image and text
                       Flexible(
-                         child: Text(
+                        child: Text(
                           book['title'] ?? 'Unknown',
                           style: const TextStyle(
                             color: blue,
@@ -254,26 +273,28 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-
-
+// Category Container Widget
 class CategoryContainer extends StatelessWidget {
   final String label;
-
-  const CategoryContainer({required this.label});
+  final VoidCallback onTap;
+  const CategoryContainer({required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(4),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: yellow.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(17),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: const TextStyle(color: blue),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: yellow.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(17),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: const TextStyle(color: blue),
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bookstore/Dashboards/home-pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +10,6 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-
-
-
 
 class EditPost extends StatefulWidget {
   final String bookID;
@@ -64,8 +62,8 @@ class _EditPostState extends State<EditPost> {
           languageController.text = bookData['language'] ?? '';
           descriptionController.text = bookData['description'] ?? '';
           selectedCategory = bookData['category'] ?? '';
+          selectedCondition = bookData['condition'] ?? ''; // Add this line for condition
           imagePath = bookData['imageUrl'] ?? '';
-
         });
       } else {
         print("Book not found!");
@@ -81,6 +79,17 @@ class _EditPostState extends State<EditPost> {
     });
 
     try {
+      // If an image file is selected, upload it to Firebase Storage
+      if (_image != null) {
+        String? imageUrl = await _uploadImageToFirebase(_image!);
+        if (imageUrl != null) {
+          // Add imageUrl to the updated data map
+          updatedData['imageUrl'] = imageUrl;
+        } else {
+          print("Image upload failed");
+        }
+      }
+
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('AllBooks')
           .where('bookID', isEqualTo: bookID)
@@ -95,7 +104,7 @@ class _EditPostState extends State<EditPost> {
             .doc(documentId)
             .update(updatedData);
 
-        //Success message
+        // Success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -132,7 +141,6 @@ class _EditPostState extends State<EditPost> {
     }
   }
 
-
   Future<void> _pickImageFromGallery() async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -152,7 +160,8 @@ class _EditPostState extends State<EditPost> {
             const Text('Image from Gallery'),
           ],
         ),
-        btnOkOnPress: () {},
+        btnOkOnPress: () {
+        },
       ).show();
     }
   }
@@ -176,8 +185,21 @@ class _EditPostState extends State<EditPost> {
             const Text('Image from Camera'),
           ],
         ),
-        btnOkOnPress: () {},
+        btnOkOnPress: () {
+        },
       ).show();
+    }
+  }
+
+  Future<String?> _uploadImageToFirebase(File imageFile) async {
+    try {
+      String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+      Reference ref = FirebaseStorage.instance.ref().child('book_images/$fileName');
+      await ref.putFile(imageFile);
+      String downloadURL = await ref.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading image: $e');
     }
   }
 
@@ -228,6 +250,7 @@ class _EditPostState extends State<EditPost> {
       'language': languageController.text,
       'description': descriptionController.text,
       'category': selectedCategory,
+      'condition': selectedCondition,
       'imageUrl': imagePath, // You can store the updated image path/URL if needed
     };
     return Scaffold(
@@ -595,14 +618,14 @@ class _EditPostState extends State<EditPost> {
                       controlAffinity: ListTileControlAffinity.leading,
                       activeColor: yellow,
                       checkColor: blue, value: isChecked,
-                        onChanged: (newValue) async {
-                          setState(() {
-                            isChecked = newValue!;
-                          });
-                          if (isChecked) {
-                            await _getCurrentLocation();
-                          }
-                        },
+                      onChanged: (newValue) async {
+                        setState(() {
+                          isChecked = newValue!;
+                        });
+                        if (isChecked) {
+                          await _getCurrentLocation();
+                        }
+                      },
                     ),
 
                     // Save Button

@@ -1,5 +1,5 @@
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/Dashboards/edit-ad.dart';
+import 'package:bookstore/BookDetails/edit-ad.dart';
 import 'package:bookstore/BookDetails/post_ad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

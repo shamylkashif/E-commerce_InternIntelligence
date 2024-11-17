@@ -67,12 +67,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     PostAD(),
     MyProfile(),
   ];
-
+  //For bottomSheet
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+  //For Drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
@@ -157,6 +159,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+  //Log out
   Future<void> onLogout(BuildContext context) async {
     // Clear email from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -167,6 +170,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),);
   }
+
+  //Drawer
   ListTile _buildDrawerItem(IconData icon, String title, int index) {
     return ListTile(
       leading: Icon(
@@ -208,31 +213,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+  //For Drawer
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => page),
     );
   }
-
 }
+
+//Home Page Content Class
 //To limit words
 String limitWords(String text, int wordLimit) {
   List<String> words = text.split(' ');
   if (words.length <= wordLimit) return text;
   return words.take(wordLimit).join(' ') + '...';
 }
-
-
-
-
 class HomePageContent extends StatefulWidget {
   const HomePageContent({super.key});
 
   @override
   State<HomePageContent> createState() => _HomePageContentState();
 }
-
 class _HomePageContentState extends State<HomePageContent> {
   //PopularBooks List
   List<Map<String, dynamic>> pBook = [];
@@ -295,7 +297,7 @@ class _HomePageContentState extends State<HomePageContent> {
       body:  SingleChildScrollView(
            child: Container(
           height: 720, // Set your desired height here
-          child: Stack(
+            child: Stack(
             children: [
               // Slider
               Padding(

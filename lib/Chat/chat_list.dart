@@ -36,6 +36,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
         .collection('UsersBookStore')
         .get();
 
+
     final users = usersSnapshot.docs.map((doc) {
       return {
         "id": doc['uid'] ?? 'Unknown uid',
@@ -49,6 +50,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
       filteredUsers = users;
     });
   }
+  
 
   // Search and filter function
   void _onSearchChanged() {
@@ -135,6 +137,8 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                       receiverId: chat['id'],
                       name: chat['name'],
                       profileImage: chat['profileImage'],
+                      latestMessage: chat['latestMessage']??"",
+                      lastUpdatedTime: chat['lastUpdatedTime']??"",
                       onTap: () async {
                         Navigator.push(
                           context,
@@ -163,6 +167,8 @@ class ChatPreviewTile extends StatelessWidget {
   final String name;
   final String profileImage;
   final VoidCallback onTap;
+  final String latestMessage;
+  final String lastUpdatedTime;
 
   const ChatPreviewTile({
     super.key,
@@ -170,6 +176,8 @@ class ChatPreviewTile extends StatelessWidget {
     required this.name,
     required this.profileImage,
     required this.onTap,
+    required this.latestMessage,
+    required this.lastUpdatedTime,
   });
 
   @override
@@ -184,6 +192,25 @@ class ChatPreviewTile extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 16),
+      ),
+      subtitle: Text(
+        latestMessage,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black ,
+        ),
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            lastUpdatedTime,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+
+        ],
       ),
       onTap: onTap,
     );

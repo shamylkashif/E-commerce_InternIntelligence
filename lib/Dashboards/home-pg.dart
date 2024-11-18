@@ -328,12 +328,10 @@ class _HomePageContentState extends State<HomePageContent> {
               //PopularBooks
               pBook.isEmpty
                   ? Center(
-                      child: CircularProgressIndicator(color: Colors.grey,), // Display loader here
-              )
-                  :
-              Padding(
-                padding: const EdgeInsets.only(top: 565, left: 5, right: 5),
-                child: Column(
+                      child: CircularProgressIndicator(color: Colors.grey,))
+                  : Padding(
+                   padding: const EdgeInsets.only(top: 565, left: 5, right: 5),
+                   child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(

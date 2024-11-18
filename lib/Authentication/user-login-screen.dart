@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bookstore/Authentication/signup-screen.dart';
 import 'package:bookstore/Dashboards/admin_dhashboard.dart';
 import 'package:bookstore/commons/colors.dart';
@@ -63,9 +65,10 @@ class _LoginScreenState extends State<LoginScreen>
     return snapshot.docs.isNotEmpty;
   }
 
-  Future<void> _saveEmailToSharedPreferences(String email) async {
+  Future<void> _saveEmailAndRoleToSharedPreferences(String email, String role) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userEmail', email);
+    await prefs.setString('userRole', role);  // Save the role as well
   }
 
   // Code for Role Selection in Bottom Sheet
@@ -226,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen>
       try {
         bool success = await _checkCredentials(email, password, selectedRole!);
         if (success) {
-          _saveEmailToSharedPreferences(email);
+          _saveEmailAndRoleToSharedPreferences(email, selectedRole!);  // Save both email and role
           SnackbarHelper.show(context, 'Successfully Logged In.',
               backgroundColor: Colors.green);
         } else {
@@ -470,7 +473,15 @@ class _LoginScreenState extends State<LoginScreen>
             ),
             // Loading Indicator
             isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? BackdropFilter(
+                 filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                 child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  child: Center(
+                    child: CircularProgressIndicator(color: Colors.grey,),
+                  ),
+                ),
+            )
                 : SizedBox.shrink(),
           ],
         ),

@@ -114,6 +114,15 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
 
 
 Widget  BookData(List<Map<String, dynamic>> booksCategory){
+  // Check if the category has no books
+  if (booksCategory.isEmpty) {
+    return Center(
+      child: Text(
+        "No Books Available",
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
+  }
   return ListView.builder(
       scrollDirection: Axis.horizontal, // Enables horizontal scrolling
       physics: BouncingScrollPhysics(),

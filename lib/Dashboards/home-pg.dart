@@ -2,7 +2,7 @@
 import 'package:bookstore/Description_Review/book_desp.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:bookstore/Dashboards/custom_tab_control.dart';
-import 'package:bookstore/BookDetails/my_posts.dart';
+import 'package:bookstore/ADs/my_posts.dart';
 import 'package:bookstore/Description_Review/read_review.dart';
 import 'package:bookstore/screens/about-us.dart';
 import 'package:bookstore/Settings/setting.dart';
@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/ask_ai.dart';
-import '../BookDetails/post_ad.dart';
+import '../ADs/post_ad.dart';
 import '../screens/search_pg.dart';
 import '../Profile/my_profile.dart';
 import '../Chat/chat_list.dart';

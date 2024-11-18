@@ -1,9 +1,10 @@
+import 'package:bookstore/ADs/post_ad.dart';
 import 'package:bookstore/commons/colors.dart';
-import 'package:bookstore/BookDetails/edit-ad.dart';
-import 'package:bookstore/BookDetails/post_ad.dart';
+import 'package:bookstore/ADs/edit-ad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class MyPostsPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class MyPostsPage extends StatefulWidget {
 class _MyPostsPageState extends State<MyPostsPage> {
   // Sample data for demonstration (you will fetch this from Firestore)
   List<Map<String, dynamic>> myPosts = [];
+  Map<int, bool> selectedPosts = {};
   @override
   void initState() {
     super.initState();
@@ -128,6 +130,76 @@ class _MyPostsPageState extends State<MyPostsPage> {
     );
   }
 
+  Future<void> markAsSold(int index) async {
+    final post = myPosts[index]; // Get the selected book details
+    final bookId = post['bookId']; // Unique custom book ID
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    try {
+      if (currentUser != null) {
+        // Get the current date
+        String sellingDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+        // Add to soldBooks collection
+        await FirebaseFirestore.instance.collection('soldBooks').add({
+          'bookID': bookId,
+          'title': post['bookName'], // Use the correct key 'bookName'
+          'author': post['authorName'], // Use the correct key 'authorName'
+          'uid': currentUser.uid,
+          'sellingDate': sellingDate,
+        });
+
+        // Query Firestore to find the document in AllBooks
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('AllBooks')
+            .where('bookID', isEqualTo: bookId)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          final document = querySnapshot.docs.first;
+
+          // Delete the document from AllBooks
+          await document.reference.delete();
+
+          // Update local state
+          setState(() {
+            myPosts.removeAt(index);
+          });
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Book marked as sold and permanently removed from AllBooks.',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+          );
+        } else {
+          // Handle the case where the book document isn't found
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Book not found in AllBooks. Please refresh.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print("Error marking book as sold: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to mark book as sold.',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,32 +219,83 @@ class _MyPostsPageState extends State<MyPostsPage> {
           return Card(
             margin: EdgeInsets.all(10),
             child: ListTile(
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  post['bookImage'] ,// Default image if sellerImage is empty
-                  height: 150,
-                  width: 60,
-                  fit: BoxFit.cover,
-                ),
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Checkbox(
+                    value: selectedPosts[index] ?? false,
+                    onChanged: (bool? value) async {
+                      setState(() {
+                        selectedPosts[index] = value ?? false;
+                      });
+
+                      if (value == true) {
+                        // Show confirmation dialog to mark as sold
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Mark as Sold'),
+                            content: Text('Do you want to mark this book as sold?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context), // Dismiss dialog
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context); // Dismiss dialog
+                                  await markAsSold(index);
+                                },
+                                child: Text(
+                                  'Yes',
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      post['bookImage'], // Default image if sellerImage is empty
+                      height: 150,
+                      width: 60,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
               ),
-              title: Text(post['bookName'],overflow: TextOverflow.ellipsis, ),
-              subtitle: Text(post['authorName'], overflow: TextOverflow.ellipsis,),
+              title: Text(
+                post['bookName'],
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                post['authorName'],
+                overflow: TextOverflow.ellipsis,
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit, color: blue,),
+                    icon: Icon(Icons.edit, color: blue),
                     onPressed: () {
                       final bookID = post['bookId']; // Get the book ID for this post
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EditPost(bookID: bookID,)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPost(bookID: bookID),
+                        ),
+                      );
                     },
                   ),
                   IconButton(
-                      icon: Icon(Icons.delete, color: blue,),
-                      onPressed: () {
-                           deletePost(index);
-                      }
+                    icon: Icon(Icons.delete, color: blue),
+                    onPressed: () {
+                      deletePost(index);
+                    },
                   ),
                 ],
               ),
@@ -180,6 +303,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
           );
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: yellow,
         foregroundColor: blue,

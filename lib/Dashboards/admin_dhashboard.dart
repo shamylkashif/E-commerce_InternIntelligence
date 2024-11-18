@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Admin-Screens/admin_profile.dart';
-import '../Admin-Screens/upload-ad.dart';
+import '../Admin-Screens/admin_read_review.dart';
 import '../Authentication/user-login-screen.dart';
-import '../BookDetails/my_posts.dart';
 import '../Description_Review/read_review.dart';
 import '../commons/colors.dart';
 
@@ -55,7 +54,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   final List<Widget> _pages = [
-    UploadAD(),
+    AdminReadReview(),
     HomeScreen(),
     AdminProfile(
     ),
@@ -106,9 +105,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
             _navigateToPage(context, ReadReview());
             break;
           case 3:
-            _navigateToPage(context, MyPostsPage());
-            break;
-          case 4:
             onLogout(context);  // Call your logout function
             break;
         }
@@ -148,7 +144,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         animationDuration: Duration(milliseconds: 300),
         height: 50,
         items: [
-          Icon(Icons.add, size: 24, color: blue),
+          Icon(Icons.reviews, size: 24, color: blue),
           Icon(Icons.home, size: 24, color: blue),
           Icon(Icons.person, size: 24, color: blue),
         ],
@@ -182,8 +178,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
               _buildDrawerItem(Icons.reviews, "Read Review", 2),
-              _buildDrawerItem(Icons.article, "My Ads", 3),
-              _buildDrawerItem(Icons.logout, "Logout", 4),
+              _buildDrawerItem(Icons.logout, "Logout", 3),
             ],
           ),
         ),
@@ -203,7 +198,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Column(
+
+      ),
+    );
   }
 }
 

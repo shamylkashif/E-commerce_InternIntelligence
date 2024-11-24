@@ -88,6 +88,7 @@ flutter:
   assets:
     - assets/
     - assets/slider/
+    - assets/star_pattern.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

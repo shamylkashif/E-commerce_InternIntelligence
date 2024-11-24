@@ -1,3 +1,6 @@
+import 'package:bookstore/Admin-Screens/manage-users.dart';
+import 'package:bookstore/Admin-Screens/manage_books.dart';
+import 'package:bookstore/Admin-Screens/sold_books.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -196,11 +199,316 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? name;
+  String? profileImage;
+  int totalUsers = 0;
+  int totalBooks = 0;
+  int soldBooks = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAdminData();
+    _fetchCounts();
+  }
+
+  // Fetch admin's name and profileImage by querying Firestore using the current user's UID
+  void _fetchAdminData() async {
+    try {
+      // Get the current logged-in user UID from Firebase Authentication
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Query the `admin` collection where `adminId` field matches the user's UID
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('admin')
+            .where('adminID', isEqualTo: user.uid)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          // Assume only one document matches
+          var adminData = querySnapshot.docs.first.data() as Map<String, dynamic>;
+
+          setState(() {
+            name = adminData['name'] ?? 'No Name';
+            profileImage = adminData['profileImage'] ?? '';
+          });
+        } else {
+          print("No admin document found with the given adminId.");
+        }
+      }
+    } catch (e) {
+      print("Error fetching admin data: $e");
+
+    }
+  }
+
+  //Fetch Counts
+  Future<void> _fetchCounts() async {
+    try{
+      //Get document count from three collections
+      var usersSnapshot = await FirebaseFirestore.instance.collection('UsersBookStore').get();
+      var booksSnapshot = await FirebaseFirestore.instance.collection('AllBooks').get();
+      var soldSnapshot = await FirebaseFirestore.instance.collection('soldBooks').get();
+
+      setState(() {
+        totalUsers = usersSnapshot.docs.length;
+        totalBooks = booksSnapshot.docs.length;
+        soldBooks = soldSnapshot.docs.length;
+      });
+
+    }catch(e) {
+      print('Error fetching counts: $e');
+
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    var size = MediaQuery.of(context).size;
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [primeryColor, primeryColor2])),
+      child: Container(
+        padding: EdgeInsets.only(top: size.height * 0.03),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
 
+              //Admin name and profile
+              Positioned(
+                top: size.height * 0.03,
+                left: size.width * 0.03,
+                right: size.width * 0.03,
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name ?? "No Name",
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundImage: profileImage != null && profileImage!.isNotEmpty
+                          ? NetworkImage(profileImage!)
+                          : null,
+                    )
+                  ],
+                ),
+              ),
+
+              //GridView
+              Positioned(
+                  bottom: 0,
+                  top:  size.height * 0.35,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      )
+                    ),
+                    child: Padding(
+                        padding: EdgeInsets.only(
+                          top: size.height *0.05,
+                          left: size.width *0.03,
+                          right: size.width*0.03
+                        ),
+                      child: GridView(
+                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                          ),
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ManageUsers()));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50, // Light blue background
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.manage_accounts, size: 40, color: blue), // Replace with your icon/image
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Manage Users",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ManageBooks()));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50, // Light blue background
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.settings, size: 40, color: blue), // Replace with your icon/image
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Manage Books",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>SoldBooks()));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50, // Light blue background
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.attach_money, size: 40, color: blue), // Replace with your icon/image
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Sold books",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ),
+
+              //Count Containers
+              Positioned(
+                  top :size.height * 0.20,
+                  right :size.width * 0.03,
+                  left : size.width * 0.03,
+                  child : Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border:
+                              Border.all(width: 1, color: blue)),
+                          height: size.height * 0.20,
+                          width: size.width * 0.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/group.png", color: yellow,height: 70,width: 70,),
+                                Text(
+                                  "Total Users",
+                                ),
+                                Text(
+                                  totalUsers.toString(),
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border:
+                              Border.all(width: 1, color: blue)),
+                          height: size.height * 0.20,
+                          width: size.width * 0.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset('assets/book.png', color: blue,height: 70,width: 70,),
+                                Text(
+                                  "Total Books",
+                                ),
+                                Text(
+                                  totalBooks.toString(),
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border:
+                              Border.all(width: 1, color: blue)),
+                          height: size.height * 0.20,
+                          width: size.width * 0.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset('assets/transfer.png', color: Colors.green,height: 70,width: 70,),
+                                Text(
+                                  "Sold Books",
+                                ),
+                                Text(
+                                  soldBooks.toString(),
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+
+            ],
+          ),
+        ),
       ),
     );
   }

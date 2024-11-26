@@ -119,39 +119,34 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
               itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
                 final chat = filteredUsers[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric( horizontal: 8.0, ), // Reduced vertical padding
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: ChatPreviewTile(
+                        receiverId: chat['id'],
+                        name: chat['name'],
+                        profileImage: chat['profileImage'],
+                        latestMessage: chat['latestMessage']??"",
+                        lastUpdatedTime: chat['lastUpdatedTime']??"",
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyChat(
+                                  receiverId: chat['id'],
+                                  name: chat['name'],
+                                  profileImage:chat['profileImage']),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                    child: ChatPreviewTile(
-                      receiverId: chat['id'],
-                      name: chat['name'],
-                      profileImage: chat['profileImage'],
-                      latestMessage: chat['latestMessage']??"",
-                      lastUpdatedTime: chat['lastUpdatedTime']??"",
-                      onTap: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyChat(
-                                receiverId: chat['id'],
-                                name: chat['name'],
-                                profileImage:chat['profileImage']),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                    Divider(),
+                  ],
                 );
               },
             ),

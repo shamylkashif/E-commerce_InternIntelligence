@@ -326,10 +326,8 @@ class _HomePageContentState extends State<HomePageContent> {
                 child: CustomTabBar(),
               ),
               //PopularBooks
-              pBook.isEmpty
-                  ? Center(
-                      child: CircularProgressIndicator(color: Colors.grey,))
-                  : Padding(
+              if(pBook.isNotEmpty)
+               Padding(
                    padding: const EdgeInsets.only(top: 565, left: 5, right: 5),
                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

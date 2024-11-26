@@ -140,15 +140,6 @@ class _MyPostsPageState extends State<MyPostsPage> {
         // Get the current date
         String sellingDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-        // Add to soldBooks collection
-        await FirebaseFirestore.instance.collection('soldBooks').add({
-          'bookID': bookId,
-          'title': post['bookName'], // Use the correct key 'bookName'
-          'author': post['authorName'], // Use the correct key 'authorName'
-          'uid': currentUser.uid,
-          'sellingDate': sellingDate,
-        });
-
         // Query Firestore to find the document in AllBooks
         final querySnapshot = await FirebaseFirestore.instance
             .collection('AllBooks')
@@ -157,6 +148,20 @@ class _MyPostsPageState extends State<MyPostsPage> {
 
         if (querySnapshot.docs.isNotEmpty) {
           final document = querySnapshot.docs.first;
+          final documentData = document.data();
+
+          // Retrieve the imageUrl from the document
+          final imageUrl = documentData['imageUrl'] ?? '';
+
+          // Add to soldBooks collection
+          await FirebaseFirestore.instance.collection('soldBooks').add({
+            'bookID': bookId,
+            'title': post['bookName'],
+            'author': post['authorName'],
+            'imageUrl': imageUrl, // Include imageUrl
+            'uid': currentUser.uid,
+            'sellingDate': sellingDate,
+          });
 
           // Delete the document from AllBooks
           await document.reference.delete();

@@ -672,7 +672,7 @@ class _PostADState extends State<PostAD> {
                 child: Container(
                   color: Colors.black.withOpacity(0.3),
                   child: Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: Colors.grey,),
                   ),
                 ),
               ),

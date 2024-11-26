@@ -443,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen>
                             'Do not have an account?',
                             style: TextStyle(
                                 fontSize: 13,
-                                color: selectedRole == 'admin' ? Colors.white : blue),
+                                color: selectedRole == 'admin' ? Color.fromRGBO(250, 249, 24, 0) : blue),
                           ),
                           const SizedBox(width: 3),
                           GestureDetector(
@@ -459,7 +459,7 @@ class _LoginScreenState extends State<LoginScreen>
                               'Signup',
                               style: TextStyle(
                                 fontSize: 15,
-                                color: selectedRole == 'admin' ? Colors.white : blue,
+                                color: selectedRole == 'admin' ? Color.fromRGBO(250, 249, 24, 0) : blue,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

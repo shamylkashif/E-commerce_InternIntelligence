@@ -213,22 +213,18 @@ class ChatPreviewTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 16),
       ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            lastMessage,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-          if (lastUpdated != null)
-            Text(
-              _formatTimestamp(lastUpdated!),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-        ],
+      subtitle: Text(
+        lastMessage,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 14, color: Colors.grey),
       ),
+      trailing: lastUpdated != null ?
+      Text(
+        _formatTimestamp(lastUpdated!),
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
+      )
+          : null,
       onTap: onTap,
     );
   }

@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //Admin name and profile
               Positioned(
-                top: size.height * 0.03,
+                top: size.height * 0.00,
                 left: size.width * 0.03,
                 right: size.width * 0.03,
                 child: Row(
@@ -326,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //GridView
               Positioned(
                   bottom: 0,
-                  top:  size.height * 0.35,
+                  top:  size.height * 0.30,
                   right: 0,
                   left: 0,
                   child: Container(
@@ -422,10 +422,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
               ),
+              
 
               //Count Containers
               Positioned(
-                  top :size.height * 0.20,
+                  top :size.height * 0.13,
                   right :size.width * 0.03,
                   left : size.width * 0.03,
                   child : Row(

@@ -1,3 +1,4 @@
+import 'package:bookstore/Admin-Screens/view_user_info.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -120,43 +121,58 @@ class _ManageUsersState extends State<ManageUsers> {
                   var item = _filteredItems[index];
                   return Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric( horizontal: 16.0), // Reduced vertical padding
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                               shape: BoxShape.circle,
-                               border: Border.all(color: blue,)
-                            ),
-                              child: CircleAvatar(
-                                radius: 25, // Adjust size
-                                backgroundImage:
-                                NetworkImage(item['profileImage'] ?? ""),
+                      InkWell(
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              showDragHandle: true,
+                              isDismissible: true,
+                            builder: (context) {
+                              return SizedBox(
+                                height: 300,
+                                child: ViewUserInfo(user: item), // Pass user data to ViewUserInfo
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric( horizontal: 16.0), // Reduced vertical padding
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                 shape: BoxShape.circle,
+                                 border: Border.all(color: blue,)
                               ),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Text(
-                                item['name'] ?? "",
-                                style: TextStyle(
-                                  fontSize: 18,
+                                child: CircleAvatar(
+                                  radius: 25, // Adjust size
+                                  backgroundImage:
+                                  NetworkImage(item['profileImage'] ?? ""),
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                _deleteUser(item['uid']);
-                              },
-                            ),
-                          ],
+                              SizedBox(
+                                width: 16,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  item['name'] ?? "",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _deleteUser(item['uid']);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Divider( // Adds a thin line/divider after each container

@@ -1,3 +1,4 @@
+import 'package:bookstore/Admin-Screens/view_book_detail.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +24,34 @@ class _ManageBooksState extends State<ManageBooks> {
   // Fetch data from Firestore
   Future<void> fetchData() async {
     try {
-      QuerySnapshot querySnapshot = await _collectionRef.get();
-      List<Map<String, dynamic>> fetchedData = querySnapshot.docs
+      // Fetch books from AllBooks collection
+      QuerySnapshot bookSnapshot = await _collectionRef.get();
+      List<Map<String, dynamic>> books = bookSnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
+      // Fetch ratings from Ratings collection
+      QuerySnapshot ratingSnapshot = await FirebaseFirestore.instance.collection('ratings').get();
+      Map<String, dynamic> ratings = {}; // Map of bookId -> rating
+
+      // Process ratings data
+      for (var doc in ratingSnapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        ratings[data['bookId']] = data['rating']; // Note the lowercase 'bookId'
+      }
+
+      // Merge ratings with books
+      List<Map<String, dynamic>> booksWithRatings = books.map((book) {
+        // Match bookId from Ratings with bookID from AllBooks
+        String bookIdKey = book['bookID']; // `bookID` from AllBooks
+        book['rating'] = ratings[bookIdKey] ?? 0.0; // Default rating if no match
+        return book;
+      }).toList();
+
+      // Update the state with books and ratings
       setState(() {
-        _items = fetchedData;
-        _filteredItems = fetchedData; // Initially show all users
+        _items = booksWithRatings;
+        _filteredItems = booksWithRatings;
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -119,48 +140,53 @@ class _ManageBooksState extends State<ManageBooks> {
                   var item = _filteredItems[index];
                   return Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric( horizontal: 16.0), // Reduced vertical padding
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: blue,)
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ViewBookDetail(book: item)));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric( horizontal: 16.0), // Reduced vertical padding
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: blue,)
+                                ),
+                                child: CircleAvatar(
+                                  radius: 25, // Adjust size
+                                  backgroundImage:
+                                  NetworkImage(item['imageUrl'] ?? ""),
+                                ),
                               ),
-                              child: CircleAvatar(
-                                radius: 25, // Adjust size
-                                backgroundImage:
-                                NetworkImage(item['imageUrl'] ?? ""),
+                              SizedBox(
+                                width: 16,
                               ),
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: ListTile(
-                                title: Text(
-                                  item['title'] ?? "",
-                                  style: TextStyle(
-                                    fontSize: 18,
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    item['title'] ?? "",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                subtitle: Text(item['author'] ?? "",
-                                style: TextStyle(color: Colors.grey),
+                                  subtitle: Text(item['author'] ?? "",
+                                  style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                _deleteUser(item['bookID']);
-                              },
-                            ),
-                          ],
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _deleteUser(item['bookID']);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Divider( // Adds a thin line/divider after each container

@@ -209,7 +209,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Posts'),
+        title: Text('My Posts', style: TextStyle(color: blue),),
         leading: IconButton(
           icon: Icon(Icons.arrow_circle_left_outlined,color: blue,),
           onPressed: () => Navigator.pop(context),

@@ -1,4 +1,5 @@
 
+import 'package:bookstore/Dashboards/home-pg.dart';
 import 'package:bookstore/commons/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,12 @@ class _ReadReviewState extends State<ReadReview> {
   void initState() {
     super.initState();
     _fetchReview(); // Fetch reviews from Firestore
+  }
+
+  String limitWords(String text, int wordLimit) {
+    List<String> words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return words.take(wordLimit).join(' ') + '...';
   }
 
 
@@ -65,6 +72,7 @@ class _ReadReviewState extends State<ReadReview> {
             color: blue,
           ),
         ),
+        title: Text('Read Reviews', style: TextStyle(color: blue),),
       ),
       body: ListView.builder(
         itemCount: reviews.length,
@@ -142,8 +150,10 @@ class ReviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      bookName,
+                      limitWords(bookName, 3),
                       style: TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
+
                     ),
                     Text(
                       authorName,

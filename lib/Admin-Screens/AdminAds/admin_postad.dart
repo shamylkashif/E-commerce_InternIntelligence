@@ -403,7 +403,7 @@ class _AdminPostADState extends State<AdminPostAD> {
                     ),
                     TextFormField(
                       controller: titleController,
-                      textCapitalization: TextCapitalization.sentences,
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Enter book title",

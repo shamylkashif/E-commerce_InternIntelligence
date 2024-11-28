@@ -1,5 +1,5 @@
 
-import 'package:bookstore/commons/colors.dart';
+import 'package:bookstore/Dashboards/home-pg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +49,12 @@ class _AdminReadReviewState extends State<AdminReadReview> {
       print('Error fetching reviews: $e');
     }
   }
+  String limitWords(String text, int wordLimit) {
+    List<String> words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return words.take(wordLimit).join(' ') + '...';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +136,11 @@ class ReviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      bookName,
+                      limitWords(bookName, 3),
                       style: TextStyle(fontSize: 17),
                     ),
                     Text(
-                      authorName,
+                      limitWords(authorName, 3),
                       style: TextStyle(fontSize: 17),
                     ),
                     Text(

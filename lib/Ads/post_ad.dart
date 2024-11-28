@@ -403,7 +403,7 @@ class _PostADState extends State<PostAD> {
               ),
                    TextFormField(
                 controller: titleController,
-                textCapitalization: TextCapitalization.sentences,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Enter book title",
@@ -418,7 +418,7 @@ class _PostADState extends State<PostAD> {
                   )
                 ),
                 maxLines: 1,
-                inputFormatters: [LengthLimitingTextInputFormatter(30)],
+                inputFormatters: [LengthLimitingTextInputFormatter(50)],
               ),
                     SizedBox(height: 16),
 

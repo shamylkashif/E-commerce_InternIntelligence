@@ -72,6 +72,30 @@ class _SellerInformationState extends State<SellerInformation> {
 
             bookFound = true;
             break; // Exit loop once matching book is found
+          } else {
+            // If not found in UsersBookStore, fetch from admin collection
+            DocumentSnapshot adminDoc = await FirebaseFirestore.instance
+                .collection('admin')
+                .doc(uploaderUid)
+                .get();
+
+            if (adminDoc.exists) {
+              Map<String, dynamic> adminData = adminDoc.data() as Map<String, dynamic>;
+
+              // Update the state with fetched admin data
+              setState(() {
+                sellerName = adminData['name'] ?? '';
+                sellerImage = adminData['profileImage'] ?? '';
+                sellerAddress = adminData['address'] ?? '';
+                print('Admin Name: $sellerName'); // Debugging print
+                print('Admin Image URL: $sellerImage'); // Debugging print
+                print('Admin Address: $sellerAddress'); // Debugging print
+                isLoading = false;
+              });
+
+              bookFound = true;
+              break; // Exit loop once matching book is found
+            }
           }
         }
       }
@@ -89,6 +113,7 @@ class _SellerInformationState extends State<SellerInformation> {
       });
     }
   }
+
 
 
 

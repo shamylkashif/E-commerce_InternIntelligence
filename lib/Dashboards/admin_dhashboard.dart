@@ -1,3 +1,6 @@
+import 'package:bookstore/Admin-Screens/AdminAds/admin_postad.dart';
+import 'package:bookstore/Admin-Screens/AdminAds/admin_posts.dart';
+import 'package:bookstore/Admin-Screens/AdminChat/chat_list.dart';
 import 'package:bookstore/Admin-Screens/manage-users.dart';
 import 'package:bookstore/Admin-Screens/manage_books.dart';
 import 'package:bookstore/Admin-Screens/sold_books.dart';
@@ -59,8 +62,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   final List<Widget> _pages = [
     AdminReadReview(),
     HomeScreen(),
-    AdminProfile(
-    ),
+    AdminProfile(),
   ];
   //For bottomSheet
   void _onItemTapped(int index) {
@@ -108,6 +110,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
             _navigateToPage(context, ReadReview());
             break;
           case 3:
+            _navigateToPage(context, AdminPostAD());
+            break;
+          case 4:
+            _navigateToPage(context, AdminPostsPage());
+            break;
+          case 5:
             onLogout(context);  // Call your logout function
             break;
         }
@@ -137,6 +145,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
             _scaffoldKey.currentState!.openDrawer();
           },
         ),
+        actions: [
+          IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminChatList()));},
+              icon: Icon(Icons.chat, color: blue,))
+        ],
 
       ),
       body: _pages[_selectedIndex],
@@ -181,7 +193,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
               _buildDrawerItem(Icons.home, "Home", 0),
               _buildDrawerItem(Icons.person, "Profile", 1),
               _buildDrawerItem(Icons.reviews, "Read Review", 2),
-              _buildDrawerItem(Icons.logout, "Logout", 3),
+              _buildDrawerItem(Icons.add, "Post AD", 3),
+              _buildDrawerItem(Icons.post_add, "Admin Posts", 4),
+              _buildDrawerItem(Icons.logout, "Logout", 5),
             ],
           ),
         ),

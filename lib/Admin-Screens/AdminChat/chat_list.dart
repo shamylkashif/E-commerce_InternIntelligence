@@ -4,26 +4,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bookstore/Chat/my_chat.dart';
 
-class ChatPreviewScreen extends StatefulWidget {
-  const ChatPreviewScreen({super.key});
+class AdminChatList extends StatefulWidget {
+  const AdminChatList({super.key});
 
   @override
-  State<ChatPreviewScreen> createState() => _ChatPreviewScreenState();
+  State<AdminChatList> createState() => _AdminChatListState();
 }
 
-class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
+class _AdminChatListState extends State<AdminChatList> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> allUsers = [];
   List<Map<String, dynamic>> filteredUsers = [];
   final String currentUID = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Map<String, dynamic>? admin;
+
 
   @override
   void initState() {
     super.initState();
     _fetchUsers();
-    _fetchAdmin();
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -33,6 +32,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     super.dispose();
   }
 
+  // Fetch all users once and store in allUsers
   Future<void> _fetchUsers() async {
     QuerySnapshot usersSnapshot = await _firestore.collection('UsersBookStore').get();
 
@@ -82,16 +82,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
   }
 
 
-
-  Future<void> _fetchAdmin() async {
-    QuerySnapshot snapshot = await _firestore.collection('admin').get();
-    if (snapshot.docs.isNotEmpty) {
-      setState(() {
-        admin = snapshot.docs.first.data() as Map<String, dynamic>;
-      });
-    }
-  }
-
+  // Search and filter function
   void _onSearchChanged() {
     final query = _searchController.text.toLowerCase();
     setState(() {
@@ -100,6 +91,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           .toList();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -148,47 +140,11 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
               ],
             ),
           ),
-          // Admin Chat
-          if (admin != null)
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyChat(
-                      receiverId: admin!['uid'] ?? '',
-                      name: admin!['name'] ?? 'Admin',
-                      profileImage: admin!['profileImage'] ?? 'assets/images/admin_placeholder.png',
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                color: Colors.grey[200],
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          admin!['profileImage'] ?? 'assets/images/admin_placeholder.png'),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      admin!['name'] ?? 'Admin',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          const Divider(),
+
           // Chat List
           Expanded(
             child: filteredUsers.isEmpty
-                ? const Center(
-              child: Text('No users found',
-                  style: TextStyle(fontSize: 18, color: Colors.grey)),
-            )
+                ? const Center(child: Text('No users found', style: TextStyle(fontSize: 18, color: Colors.grey)))
                 : ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (context, index) {
@@ -288,4 +244,3 @@ class ChatPreviewTile extends StatelessWidget {
   }
 
 }
-

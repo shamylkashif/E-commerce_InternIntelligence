@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       }
     }
   }
+  //Bottom Nav Bar
   final List<Widget> _pages = [
     SearchPage(),
     AskAI(),
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     PostAD(),
     MyProfile(),
   ];
-  //For bottomSheet
+  //For bottom Nav Bar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

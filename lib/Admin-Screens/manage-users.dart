@@ -119,6 +119,8 @@ class _ManageUsersState extends State<ManageUsers> {
                 itemCount: _filteredItems.length,
                 itemBuilder: (context, index) {
                   var item = _filteredItems[index];
+                  String profileImageUrl = item['profileImage']??"";
+
                   return Column(
                     children: [
                       InkWell(
@@ -150,7 +152,11 @@ class _ManageUsersState extends State<ManageUsers> {
                                 child: CircleAvatar(
                                   radius: 25, // Adjust size
                                   backgroundImage:
-                                  NetworkImage(item['profileImage'] ?? ""),
+                                  profileImageUrl.isEmpty
+                                      ? AssetImage(
+                                      'assets/defaultImage.jpg') // Default image
+                                      : NetworkImage(profileImageUrl)
+                                  as ImageProvider,
                                 ),
                               ),
                               SizedBox(

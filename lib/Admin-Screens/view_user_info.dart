@@ -13,6 +13,7 @@ class ViewUserInfo extends StatefulWidget {
 class _ViewUserInfoState extends State<ViewUserInfo> {
   @override
   Widget build(BuildContext context) {
+    // String profileImageUrl = widget.user['profileImage']??"";
     // Use the passed data here
     return Scaffold(
       body: Padding(
@@ -25,7 +26,7 @@ class _ViewUserInfoState extends State<ViewUserInfo> {
                 child: SizedBox(
                   width: 70,
                   height: 70,
-                  child: Image.network(widget.user['profileImage'] ?? '', fit: BoxFit.cover,)
+                  child:Image.network(widget.user['profileImage'] ?? '', fit: BoxFit.cover,)
                 ),
               ),
               title:  Text(
@@ -35,7 +36,7 @@ class _ViewUserInfoState extends State<ViewUserInfo> {
               subtitle: Row(
                 children: [
                   Icon(Icons.location_on, color: Colors.red,),
-                  Text('${widget.user['address']??""}')
+                  Text('${widget.user['address']??"N/A"}')
                 ],
               ),
 
@@ -85,10 +86,3 @@ class _ViewUserInfoState extends State<ViewUserInfo> {
   }
 }
 
-// subtitle: Row(
-// children: [
-// Icon(Icons.location_on, color: Colors.red, size: 24),
-// SizedBox(width: 5),
-// Text(widget.user['address']),
-// ],
-// ),

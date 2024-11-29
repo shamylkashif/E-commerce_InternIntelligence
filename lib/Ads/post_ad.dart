@@ -285,6 +285,8 @@ class _PostADState extends State<PostAD> {
                 child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+                   Text('For donating book, please contact admin via chat.', style: TextStyle(color: Colors.red, fontSize: 18),),
+                   SizedBox(height: 10,),
               // Category Section
                    RichText(
                   text: TextSpan(

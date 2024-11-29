@@ -418,7 +418,7 @@ class _AdminPostADState extends State<AdminPostAD> {
                           )
                       ),
                       maxLines: 1,
-                      inputFormatters: [LengthLimitingTextInputFormatter(30)],
+                      inputFormatters: [LengthLimitingTextInputFormatter(50)],
                     ),
                     SizedBox(height: 16),
 

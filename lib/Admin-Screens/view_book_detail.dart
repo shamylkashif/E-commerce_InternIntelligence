@@ -1,6 +1,8 @@
 import 'package:bookstore/commons/colors.dart';
 import 'package:flutter/material.dart';
 
+import '../Description_Review/seller-info.dart';
+
 class ViewBookDetail extends StatefulWidget {
   final Map<String, dynamic> book;// Declare book variable
   const ViewBookDetail({Key? key, required this.book}) : super(key: key);
@@ -68,6 +70,29 @@ class _ViewBookDetailState extends State<ViewBookDetail> {
                           textAlign:TextAlign.center,
                         ),
                       ),
+                      SizedBox(height: 15,),
+                      TextButton(
+                          style:TextButton.styleFrom(
+                              foregroundColor: blue,
+                              backgroundColor: yellow,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)
+                              )
+                          ) ,
+                          onPressed: (){
+                            showModalBottomSheet(
+                                context: context,
+                                showDragHandle: true,
+                                isDismissible: true,
+                                builder: (context){
+                                  return SellerInformation(book: widget.book);
+                                }
+                            );
+                          },
+
+                          child: Text('Seller Information')
+                      ),
+
                     ],
                   ),
                 ),
@@ -119,6 +144,7 @@ class _ViewBookDetailState extends State<ViewBookDetail> {
 
             ],
           ),
+
 
         ],
       ),

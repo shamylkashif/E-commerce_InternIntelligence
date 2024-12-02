@@ -21,6 +21,7 @@ class _SellerInformationState extends State<SellerInformation> {
   String sellerAddress = '';
   GeoPoint? currentLocation; // New variable to store the location
   bool isLoading = true;
+  String? selectedRole;
 
   @override
   void initState() {
@@ -201,6 +202,7 @@ class _SellerInformationState extends State<SellerInformation> {
                 ),
               ),
               SizedBox(height: 15),
+              if(selectedRole =='UsersBookStore')
               SizedBox(
                 width: 350,
                 child: OutlinedButton(

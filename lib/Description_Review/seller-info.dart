@@ -2,6 +2,7 @@ import 'package:bookstore/Chat/chat_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../commons/colors.dart';
@@ -21,13 +22,22 @@ class _SellerInformationState extends State<SellerInformation> {
   String sellerAddress = '';
   GeoPoint? currentLocation; // New variable to store the location
   bool isLoading = true;
-  String? selectedRole;
+  String? userRole;
 
   @override
   void initState() {
     super.initState();
+    _getUserRole();
     _getSellerInfo();
   }
+
+  void _getUserRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userRole = prefs.getString('userRole'); // Retrieve the saved userRole
+    });
+  }
+
 
   Future<void> _getSellerInfo() async {
     print('Book ID: ${widget.book['bookID']}'); // Debugging print for bookID
@@ -202,10 +212,10 @@ class _SellerInformationState extends State<SellerInformation> {
                 ),
               ),
               SizedBox(height: 15),
-              if(selectedRole =='UsersBookStore')
+              if(userRole != 'admin')
               SizedBox(
                 width: 350,
-                child: OutlinedButton(
+                child:OutlinedButton(
                   style: OutlinedButton.styleFrom(backgroundColor: yellow),
                   onPressed: () {
                     Navigator.push(
@@ -214,7 +224,7 @@ class _SellerInformationState extends State<SellerInformation> {
                             builder: (context) => ChatPreviewScreen()));
                   },
                   child: Text("Contact Seller", style: TextStyle(color: blue)),
-                ),
+                ) ,
               ),
             ],
           ),

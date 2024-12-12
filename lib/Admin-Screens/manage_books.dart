@@ -71,7 +71,7 @@ class _ManageBooksState extends State<ManageBooks> {
   }
 
   // Function to delete a user from Firestore using uid
-  Future<void> _deleteUser(String bookID) async {
+  Future<void> _deleteBook(String bookID) async {
     try {
       // Query the document using the uid field to find the user
       QuerySnapshot snapshot = await _collectionRef.where('bookID', isEqualTo: bookID).get();
@@ -182,7 +182,7 @@ class _ManageBooksState extends State<ManageBooks> {
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  _deleteUser(item['bookID']);
+                                  _deleteBook(item['bookID']);
                                 },
                               ),
                             ],
